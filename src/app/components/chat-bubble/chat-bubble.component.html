@@ -1,0 +1,59 @@
+<div class="flex gap-2.5 items-start" [class]="role === 'user' ? 'justify-end' : ''">
+  <!-- Assistant avatar -->
+  @if (role === 'assistant') {
+    <div class="assistant-avatar shrink-0" aria-hidden="true">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" class="w-5 h-5">
+        <rect x="4" y="4" width="56" height="56" rx="18" fill="#2563eb" />
+        <path d="M18 33c0-8 6-14 14-14 6 0 11 3 13 8h-8c-1-2-3-3-6-3-4 0-8 4-8 9s3 9 8 9c3 0 5-1 6-3h8c-2 5-7 8-13 8-8 0-14-6-14-14Z" fill="white" opacity="0.96"/>
+        <circle cx="47" cy="22" r="4" fill="#fde047" />
+      </svg>
+    </div>
+  }
+
+  <div class="max-w-[70%] px-4 py-3 rounded-2xl text-sm leading-relaxed"
+       [class]="role === 'user'
+         ? 'bg-blue-600 text-white rounded-br-sm'
+         : 'bg-white border border-slate-200 text-slate-900 rounded-bl-sm shadow-sm'">
+    @if (role === 'user' && mode) {
+      <div class="mb-2">
+        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide"
+              [class]="role === 'user' ? 'bg-blue-500/40 text-white' : 'bg-blue-100 text-blue-700'">
+          {{ modeLabel(mode) }}
+        </span>
+      </div>
+    }
+    <p class="m-0">{{ content }}</p>
+    @if (citation) {
+      <div class="flex items-center gap-1.5 mt-2.5 px-3 py-2 rounded-lg bg-blue-50 border border-blue-200 text-xs text-blue-700 font-medium">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" />
+        </svg>
+        {{ citation }}
+      </div>
+    }
+
+    @if (role === 'assistant' && sources) {
+      <div class="mt-2.5 px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-600">
+        <div class="font-semibold mb-1">sources</div>
+        @if (sources.length === 0) {
+          <div>[]</div>
+        } @else {
+          <ul class="m-0 pl-4 space-y-0.5">
+            @for (src of sources; track src) {
+              <li>{{ src }}</li>
+            }
+          </ul>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- User avatar -->
+  @if (role === 'user') {
+    <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-slate-800 text-white shrink-0">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+      </svg>
+    </div>
+  }
+</div>

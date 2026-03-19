@@ -1,0 +1,142 @@
+.class-card {
+	display: block;
+	position: relative;
+	padding: 18px;
+	border-radius: 20px;
+	border: 1px solid #e2e8f0;
+	background: linear-gradient(180deg, #ffffff, #f8fafc);
+	box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+	transition: all 0.28s ease;
+	overflow: hidden;
+}
+
+.class-card:hover {
+	transform: translateY(-5px);
+	border-color: #c7d2fe;
+	box-shadow: 0 22px 40px rgba(99, 102, 241, 0.2);
+}
+
+.class-card__accent {
+	position: absolute;
+	inset: 0 0 auto 0;
+	height: 5px;
+	background: linear-gradient(90deg, #6366f1, #8b5cf6);
+}
+
+.class-card__head {
+	display: flex;
+	gap: 12px;
+	align-items: center;
+	margin-bottom: 14px;
+}
+
+.class-card__icon {
+	width: 44px;
+	height: 44px;
+	border-radius: 12px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	background: linear-gradient(135deg, #e0e7ff, #ede9fe);
+	color: #4f46e5;
+	flex-shrink: 0;
+}
+
+.class-card__title {
+	margin: 0;
+	font-size: 1.04rem;
+	color: #0f172a;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.class-card__grade {
+	display: inline-flex;
+	margin-top: 4px;
+	padding: 4px 10px;
+	border-radius: 999px;
+	background: #eef2ff;
+	color: #4338ca;
+	font-size: 0.72rem;
+	font-weight: 700;
+}
+
+.class-card__stats {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 9px;
+	margin-bottom: 13px;
+}
+
+.class-card__stats article {
+	padding: 10px;
+	border-radius: 12px;
+	border: 1px solid #e2e8f0;
+	background: #fff;
+}
+
+.class-card__stats span {
+	display: block;
+	color: #64748b;
+	font-size: 0.7rem;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+}
+
+.class-card__stats strong {
+	display: block;
+	margin-top: 3px;
+	color: #1e293b;
+	font-size: 1rem;
+}
+
+.class-card__footer {
+	border-top: 1px solid #e2e8f0;
+	padding-top: 11px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+}
+
+.class-card__cta {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	color: #4f46e5;
+	font-size: 0.82rem;
+	font-weight: 700;
+}
+
+.class-card__admin-actions {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4rem;
+}
+
+.class-card__btn {
+	border: 0;
+	padding: 0.35rem 0.62rem;
+	border-radius: 999px;
+	font-size: 0.74rem;
+	font-weight: 700;
+	line-height: 1;
+	cursor: pointer;
+	transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.class-card__btn:hover {
+	transform: translateY(-1px);
+	filter: brightness(0.95);
+}
+
+.class-card__btn--edit {
+	background: #dbeafe;
+	color: #1e40af;
+}
+
+.class-card__btn--delete {
+	background: #fee2e2;
+	color: #b91c1c;
+}

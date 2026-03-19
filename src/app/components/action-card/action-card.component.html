@@ -1,0 +1,7 @@
+<a [routerLink]="route"
+   class="action-card flex flex-col items-center justify-center gap-2 p-6 bg-white rounded-2xl border border-slate-200 shadow-sm
+          transition-all cursor-pointer no-underline text-center group">
+  <span class="action-icon flex items-center justify-center w-12 h-12 rounded-xl bg-blue-50 text-blue-600 [&>svg]:w-6 [&>svg]:h-6" [innerHTML]="safeIcon"></span>
+  <span class="font-semibold text-slate-900 text-sm">{{ label }}</span>
+  <span class="text-xs text-slate-500">Open module</span>
+</a>

@@ -1,0 +1,20 @@
+.action-card {
+	border-radius: 18px;
+	box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+}
+
+.action-card:hover {
+	transform: translateY(-4px);
+	border-color: #c7d2fe;
+	box-shadow: 0 16px 34px rgba(99, 102, 241, 0.16);
+}
+
+.action-card:hover .action-icon {
+	transform: scale(1.08);
+	background: linear-gradient(135deg, #e0e7ff, #ede9fe);
+	color: #4f46e5;
+}
+
+.action-icon {
+	transition: all 0.25s ease;
+}

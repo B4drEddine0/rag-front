@@ -1,0 +1,6 @@
+<div class="p-6 bg-white rounded-2xl border border-slate-200 shadow-sm text-center">
+  <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-600 text-white text-sm font-bold mb-3">{{ stepNumber }}</span>
+  <div class="flex items-center justify-center w-12 h-12 rounded-xl bg-blue-50 text-blue-600 mx-auto mb-3 [&>svg]:w-6 [&>svg]:h-6" [innerHTML]="safeIcon"></div>
+  <h3 class="mt-0 mb-2 text-base font-semibold text-slate-900">{{ title }}</h3>
+  <p class="m-0 text-slate-500 text-sm leading-relaxed">{{ description }}</p>
+</div>

@@ -1,0 +1,45 @@
+<div class="class-card">
+  <div class="class-card__accent"></div>
+
+  <div class="class-card__head">
+    <div class="class-card__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
+      </svg>
+    </div>
+    <div class="min-w-0">
+      <h3 class="class-card__title">{{ name }}</h3>
+      <span class="class-card__grade">{{ grade }}</span>
+    </div>
+  </div>
+
+  <div class="class-card__stats">
+    <article>
+      <span>Students</span>
+      <strong>{{ studentsCount }}</strong>
+    </article>
+    <article>
+      <span>Teachers</span>
+      <strong>{{ teachersCount }}</strong>
+    </article>
+    <article>
+      <span>Resources</span>
+      <strong>{{ resourcesCount }}</strong>
+    </article>
+  </div>
+
+  <div class="class-card__footer">
+    <a [routerLink]="['/classes', classId]" class="class-card__cta no-underline">
+      View Details
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+      </svg>
+    </a>
+    @if (showAdminActions) {
+      <div class="class-card__admin-actions">
+        <button type="button" class="class-card__btn class-card__btn--edit" (click)="onEdit($event)">Edit</button>
+        <button type="button" class="class-card__btn class-card__btn--delete" (click)="onDelete($event)">Delete</button>
+      </div>
+    }
+  </div>
+</div>
