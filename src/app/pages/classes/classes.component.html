@@ -1,0 +1,95 @@
+<div class="flex items-center justify-between mb-1">
+  <app-page-header title="Classes" subtitle="Manage and view all school classes" />
+  @if (isAdmin()) {
+    <button (click)="showAddForm = !showAddForm"
+      class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors shrink-0">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+      </svg>
+      New Class
+    </button>
+  }
+</div>
+
+@if (showAddForm) {
+  <div class="mb-5 p-4 bg-white border border-slate-200 rounded-xl shadow-sm">
+    <h3 class="text-sm font-semibold text-slate-700 mb-3">Create New Class</h3>
+    <div class="flex flex-wrap gap-3">
+      <input [(ngModel)]="newClassName" placeholder="Class name (e.g. Math 101)"
+        class="flex-1 min-w-48 px-3 py-2 text-sm border border-slate-200 rounded-lg outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100" />
+      <input [(ngModel)]="newYear" type="number" placeholder="Year"
+        class="w-28 px-3 py-2 text-sm border border-slate-200 rounded-lg outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100" />
+      <button (click)="createClass()" [disabled]="saving || !newClassName.trim()"
+        class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+        {{ saving ? 'Creating…' : 'Create' }}
+      </button>
+      <button (click)="showAddForm = false"
+        class="px-4 py-2 text-sm font-medium text-slate-600 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors">
+        Cancel
+      </button>
+    </div>
+  </div>
+}
+
+@if (showEditForm) {
+  <div class="mb-5 p-4 bg-white border border-slate-200 rounded-xl shadow-sm">
+    <h3 class="text-sm font-semibold text-slate-700 mb-3">Edit Class</h3>
+    <div class="flex flex-wrap gap-3">
+      <input [(ngModel)]="editClassName" placeholder="Class name"
+        class="flex-1 min-w-48 px-3 py-2 text-sm border border-slate-200 rounded-lg outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100" />
+      <input [(ngModel)]="editYear" type="number" placeholder="Year"
+        class="w-28 px-3 py-2 text-sm border border-slate-200 rounded-lg outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100" />
+      <button (click)="saveEditClass()" [disabled]="saving || !editClassName.trim()"
+        class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+        {{ saving ? 'Saving…' : 'Save Changes' }}
+      </button>
+      <button (click)="cancelEditClass()"
+        class="px-4 py-2 text-sm font-medium text-slate-600 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors">
+        Cancel
+      </button>
+    </div>
+  </div>
+}
+
+@if (classes.length > 0) {
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    @for (cls of classes; track cls.id) {
+      <app-class-card
+        [classId]="cls.id"
+        [name]="cls.name"
+        [grade]="cls.grade"
+        [studentsCount]="cls.studentsCount"
+        [teachersCount]="cls.teachers.length"
+        [resourcesCount]="cls.resources.length"
+        [showAdminActions]="isAdmin()"
+        (editClicked)="startEditClass(cls)"
+        (deleteClicked)="deleteClass(cls)" />
+    }
+  </div>
+} @else if (loading) {
+  <div class="flex items-center justify-center py-16 text-slate-400">
+    <svg class="animate-spin w-6 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+    </svg>
+    Loading classes…
+  </div>
+} @else if (error) {
+  <div class="flex flex-col items-center justify-center py-16 text-center">
+    <p class="text-red-500 font-medium mb-3">{{ error }}</p>
+    <button (click)="loadClasses()" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors">
+      Retry
+    </button>
+  </div>
+} @else if (classes.length === 0) {
+  <div class="flex flex-col items-center justify-center py-16 text-center text-slate-400">
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 mb-3 opacity-40" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
+    </svg>
+    <p>No classes found.</p>
+    @if (isAdmin()) {
+      <p class="text-sm mt-1">Click <strong>New Class</strong> to add one.</p>
+    }
+  </div>
+}
+

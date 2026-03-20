@@ -1,0 +1,130 @@
+<div class="mb-6">
+  <a routerLink="/classes" class="inline-flex items-center gap-1.5 text-blue-600 text-sm font-medium no-underline hover:underline mb-3">
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+    </svg>
+    Back to Classes
+  </a>
+  @if (schoolClass) {
+    <h1 class="text-2xl font-bold text-slate-900 mt-2 mb-2">{{ schoolClass.name }}</h1>
+    <span class="inline-block px-3.5 py-1 rounded-full text-xs font-semibold text-blue-700 bg-blue-100">{{ schoolClass.grade }}</span>
+  }
+</div>
+
+@if (loading) {
+  <div class="flex items-center justify-center py-16 text-slate-400">
+    <svg class="animate-spin w-6 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+    </svg>
+    Loading class details...
+  </div>
+} @else if (error) {
+  <div class="p-10 bg-white rounded-2xl border border-red-200 text-center">
+    <p class="text-red-500 font-medium mb-3">{{ error }}</p>
+    <a routerLink="/classes" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg no-underline hover:bg-blue-700 transition-colors">
+      Back to Classes
+    </a>
+  </div>
+}
+
+@if (schoolClass) {
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+    <!-- Teachers -->
+    <div class="p-5 bg-white rounded-2xl border border-slate-200 shadow-sm">
+      <div class="flex items-center gap-2.5 mb-4">
+        <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-50 text-blue-600">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+          </svg>
+        </div>
+        <h2 class="text-lg font-semibold text-slate-900 m-0">Assigned Teachers</h2>
+      </div>
+      <div class="flex flex-col gap-3">
+        @for (teacher of schoolClass.teachers; track teacher) {
+          <div class="flex items-center gap-2.5">
+              <div class="flex items-center justify-center w-9 h-9 rounded-full bg-blue-50 text-blue-600 shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                </svg>
+              </div>
+            <span class="text-slate-700">{{ teacher }}</span>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Resources -->
+    <div class="p-5 bg-white rounded-2xl border border-slate-200 shadow-sm">
+      <div class="flex items-center gap-2.5 mb-4">
+        <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-50 text-blue-600">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 0 1 4.5 9.75h15A2.25 2.25 0 0 1 21.75 12v.75m-8.69-6.44-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v8.25m19.5 0v2.25A2.25 2.25 0 0 1 19.5 18.75h-15a2.25 2.25 0 0 1-2.25-2.25v-2.25" />
+          </svg>
+        </div>
+        <h2 class="text-lg font-semibold text-slate-900 m-0">Attached Resources</h2>
+      </div>
+      @if (resources.length > 0) {
+        <div class="flex flex-col gap-3">
+          @for (res of resources; track res.id) {
+            <div class="flex items-start gap-2.5">
+              <div class="flex items-center justify-center w-7 h-7 rounded bg-slate-100 text-slate-400 mt-0.5 shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                </svg>
+              </div>
+              <div>
+                <span class="font-medium text-slate-800 block mb-1">{{ res.title }}</span>
+                <span class="inline-block px-2 py-0.5 rounded-full text-xs font-semibold"
+                      [class]="res.type === 'official' ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-500'">
+                  {{ res.type === 'official' ? 'Official' : 'Non-official' }}
+                </span>
+              </div>
+            </div>
+          }
+        </div>
+      } @else {
+        <p class="text-slate-400 text-sm">No resources attached to this class.</p>
+      }
+    </div>
+  </div>
+
+  <!-- Students Table -->
+  <div class="p-5 bg-white rounded-2xl border border-slate-200 shadow-sm">
+    <div class="flex items-center gap-2.5 mb-4">
+      <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-50 text-blue-600">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
+        </svg>
+      </div>
+      <h2 class="text-lg font-semibold text-slate-900 m-0">Students ({{ students.length }})</h2>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="border-b border-slate-200">
+            <th class="text-left py-3 px-4 font-semibold text-slate-600">Name</th>
+            <th class="text-left py-3 px-4 font-semibold text-slate-600">Email</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (student of students; track student.id) {
+            <tr class="border-b border-slate-100 hover:bg-slate-50">
+              <td class="py-3 px-4 text-slate-800">{{ student.name }}</td>
+              <td class="py-3 px-4 text-slate-500">{{ student.email }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    <div class="mt-4 flex justify-end">
+      <a routerLink="/attendance"
+         class="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white text-sm font-semibold rounded-xl no-underline hover:bg-blue-700 transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M11.35 3.836c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m8.9-4.414c.376.023.75.05 1.124.08 1.131.094 1.976 1.057 1.976 2.192V16.5A2.25 2.25 0 0 1 18 18.75h-2.25m-7.5-10.5H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V18.75m-7.5-10.5h6.375c.621 0 1.125.504 1.125 1.125v9.375m-8.25-3 1.5 1.5 3-3.75" />
+        </svg>
+        Take Attendance
+      </a>
+    </div>
+  </div>
+}

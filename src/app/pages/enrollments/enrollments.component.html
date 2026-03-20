@@ -1,0 +1,67 @@
+<app-page-header title="Enrollments" subtitle="Assign students to classes and manage enrollment status" />
+
+<div class="panel-premium p-5 mb-5">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+    <select [(ngModel)]="selectedClassId" (change)="loadClassEnrollments()"
+      class="px-3 py-2.5 text-sm border border-slate-200 rounded-xl outline-none focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100">
+      <option [ngValue]="0">Select class</option>
+      @for (cls of classes(); track cls.id) {
+        <option [ngValue]="cls.id">{{ cls.name }} ({{ cls.year }})</option>
+      }
+    </select>
+
+    <select [(ngModel)]="selectedStudentId"
+      class="px-3 py-2.5 text-sm border border-slate-200 rounded-xl outline-none focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100">
+      <option [ngValue]="0">Select student</option>
+      @for (s of students(); track s.id) {
+        <option [ngValue]="s.id">{{ studentName(s.id) }}</option>
+      }
+    </select>
+
+    <button (click)="createEnrollment()" [disabled]="!selectedClassId || !selectedStudentId"
+      class="btn-premium disabled:opacity-50 disabled:cursor-not-allowed">
+      Create Enrollment
+    </button>
+  </div>
+</div>
+
+@if (setupLoading()) {
+  <div class="py-12 text-center text-slate-400">Loading setup data...</div>
+} @else if (setupError()) {
+  <div class="py-12 text-center text-red-500">{{ setupError() }}</div>
+} @else if (!selectedClassId) {
+  <div class="py-12 text-center text-slate-400">Select a class to view enrollments.</div>
+} @else if (loadingEnrollments()) {
+  <div class="py-12 text-center text-slate-400">Loading enrollments...</div>
+} @else if (enrollments().length === 0) {
+  <div class="py-12 text-center text-slate-400">No enrollments for {{ className(selectedClassId) }}.</div>
+} @else {
+  <div class="table-shell">
+    <table class="table-premium">
+      <thead>
+        <tr>
+          <th>Student</th>
+          <th>Status</th>
+          <th>Enrolled At</th>
+          <th class="text-right">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (e of enrollments(); track e.id) {
+          <tr>
+            <td>{{ studentName(e.studentId) }}</td>
+            <td><span class="status-pill" [class.active]="e.status === 'ACTIVE'" [class.ended]="e.status !== 'ACTIVE'">{{ e.status }}</span></td>
+            <td>{{ e.enrolledAt | date:'yyyy-MM-dd HH:mm' }}</td>
+            <td class="text-right">
+              @if (e.status === 'ACTIVE') {
+                <button (click)="endEnrollment(e.id)" class="px-3 py-1.5 text-xs font-semibold text-amber-700 bg-amber-50 rounded-full hover:bg-amber-100">End</button>
+              } @else {
+                <span class="text-slate-400">Ended</span>
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}
