@@ -1,0 +1,26 @@
+:host { display: block; }
+
+.register-shell {
+	background: #f8fafc;
+}
+
+.register-card {
+	background: rgba(255, 255, 255, 0.92);
+	border: 1px solid rgba(187, 247, 208, 0.85);
+	border-radius: 1.2rem;
+	box-shadow: 0 20px 44px rgba(2, 6, 23, 0.11);
+	backdrop-filter: blur(8px);
+}
+
+.register-logo {
+	background: #2563eb;
+	box-shadow: 0 10px 22px rgba(37, 99, 235, 0.28);
+}
+
+.register-submit {
+	background: #2563eb;
+}
+
+.register-submit:hover {
+	filter: brightness(1.03);
+}
