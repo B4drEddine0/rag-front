@@ -43,8 +43,6 @@ export class ResourceService {
       responseType: 'blob'
     });
   }
-
-  // Backward compatibility for existing call sites.
   getAll(): Observable<ResourceDto[]> {
     return this.getResources();
   }

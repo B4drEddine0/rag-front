@@ -1,6 +1,6 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { forkJoin, of } from 'rxjs';
-import { catchError, finalize, timeout } from 'rxjs/operators';
+import { forkJoin, Observable, of } from 'rxjs';
+import { catchError, finalize, map, switchMap, timeout } from 'rxjs/operators';
 import { ClassroomService } from './classroom.service';
 import { EnrollmentService } from './enrollment.service';
 import { OwnershipService } from './ownership.service';
@@ -15,6 +15,7 @@ import { SchoolClass, Student } from '../../shared/models/class.model';
 import { Resource } from '../../shared/models/resource.model';
 import { ChatMessage } from '../../shared/models/chat.model';
 import { ChatMode } from '../../shared/models/chat-api.model';
+import { AuthService } from './auth.service';
 
 export interface ClassDetailsState {
   loading: boolean;
@@ -76,6 +77,8 @@ export interface OwnershipsByClassState {
 
 @Injectable({ providedIn: 'root' })
 export class ViewStateService {
+  private static readonly CHAT_STORAGE_PREFIX = 'chat_history_user_';
+
   private readonly classroomService = inject(ClassroomService);
   private readonly enrollmentService = inject(EnrollmentService);
   private readonly ownershipService = inject(OwnershipService);
@@ -85,6 +88,7 @@ export class ViewStateService {
   private readonly userService = inject(UserService);
   private readonly attendanceRecordService = inject(AttendanceRecordService);
   private readonly chatService = inject(ChatService);
+  private readonly authService = inject(AuthService);
 
   readonly classes = signal<SchoolClass[]>([]);
   readonly classesLoading = signal(false);
@@ -138,6 +142,48 @@ export class ViewStateService {
 
   private readonly CHAT_FALLBACK_PHRASES = ['provider unavailable', 'external provider', 'ai provider', 'fallback'];
 
+  hydrateChatForCurrentUser(): void {
+    const key = this.chatStorageKey();
+    if (!key) {
+      this.chatMessages.set([]);
+      this.chatError.set('');
+      this.chatFallbackBanner.set(false);
+      this.chatLoading.set(false);
+      return;
+    }
+
+    try {
+      const raw = localStorage.getItem(key);
+      if (!raw) {
+        this.chatMessages.set([]);
+        return;
+      }
+
+      const parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed)) {
+        this.chatMessages.set([]);
+        return;
+      }
+
+      const hydrated = parsed
+        .filter(item => !!item && typeof item === 'object')
+        .map(item => ({
+          role: item.role === 'assistant' ? 'assistant' : 'user',
+          content: typeof item.content === 'string' ? item.content : '',
+          citation: typeof item.citation === 'string' ? item.citation : undefined,
+          sources: Array.isArray(item.sources) ? item.sources.filter((src: unknown): src is string => typeof src === 'string') : undefined,
+          mode: item.mode,
+          timestamp: item.timestamp ? new Date(item.timestamp) : new Date()
+        })) as ChatMessage[];
+
+      this.chatMessages.set(hydrated);
+      this.chatError.set('');
+      this.chatLoading.set(false);
+    } catch {
+      this.chatMessages.set([]);
+    }
+  }
+
   loadClasses(force = false): void {
     if (this.classesLoading()) return;
     if (this.classesLoaded() && !force) return;
@@ -152,7 +198,7 @@ export class ViewStateService {
       }
     }, 15000);
 
-    this.classroomService.getAll().pipe(
+    this.getClassroomsForCurrentRole().pipe(
       timeout(10000),
       catchError(() => {
         this.classesError.set('Failed to load classes. Please try again.');
@@ -216,9 +262,11 @@ export class ViewStateService {
       }
     }, 15000);
 
+    const canReadUsers = this.authService.role() === 'ADMIN';
+
     forkJoin({
       resources: this.resourceService.getResources().pipe(timeout(10000), catchError(() => of([]))),
-      users: this.userService.getAll().pipe(timeout(10000), catchError(() => of([])))
+      users: (canReadUsers ? this.userService.getAll() : of([])).pipe(timeout(10000), catchError(() => of([])))
     }).subscribe({
       next: ({ resources, users }) => {
         const safeUsers = Array.isArray(users) ? users : [];
@@ -256,17 +304,26 @@ export class ViewStateService {
       [classId]: { loading: true, error: '', schoolClass: undefined, students: [], resources: [] }
     }));
 
+    const canReadUsers = this.authService.role() === 'ADMIN';
+
     forkJoin({
       classroom: this.classroomService.getById(classId).pipe(timeout(10000), catchError(() => of(null))),
       enrollments: this.enrollmentService.getByClass(classId).pipe(timeout(10000), catchError(() => of([]))),
       ownerships: this.ownershipService.getByClass(classId).pipe(timeout(10000), catchError(() => of([]))),
       students: this.studentService.getAll().pipe(timeout(10000), catchError(() => of([]))),
       teachers: this.teacherService.getAll().pipe(timeout(10000), catchError(() => of([]))),
-      users: this.userService.getAll().pipe(timeout(10000), catchError(() => of([]))),
+      users: (canReadUsers ? this.userService.getAll() : of([])).pipe(timeout(10000), catchError(() => of([]))),
       resources: this.resourceService.getByClass(classId).pipe(timeout(10000), catchError(() => of([])))
     }).subscribe({
       next: ({ classroom, enrollments, ownerships, students, teachers, users, resources }) => {
-        if (!classroom) {
+        const fallbackClass = this.classes().find(c => Number(c.id) === classId);
+        const safeClassroom = classroom ?? (fallbackClass ? {
+          id: classId,
+          name: fallbackClass.name,
+          year: fallbackClass.year
+        } : null);
+
+        if (!safeClassroom) {
           this.classDetails.update(prev => ({
             ...prev,
             [classId]: { loading: false, error: 'Failed to load class details.', students: [], resources: [] }
@@ -291,9 +348,9 @@ export class ViewStateService {
           .map(t => userMap.get(t.userId)?.fullName ?? 'Teacher');
 
         const schoolClass: SchoolClass = {
-          id: String(classroom.id ?? ''),
-          name: classroom.name ?? 'Class',
-          grade: `Year ${classroom.year ?? '-'}`,
+          id: String(safeClassroom.id ?? ''),
+          name: safeClassroom.name ?? 'Class',
+          grade: `Year ${safeClassroom.year ?? '-'}`,
           studentsCount: safeEnrollments.length,
           teachers: teacherNames,
           resources: safeResources.map(r => r?.title ?? 'Resource')
@@ -306,7 +363,7 @@ export class ViewStateService {
             id: String(s.id ?? ''),
             name: userMap.get(s.userId)?.fullName ?? 'Student',
             email: userMap.get(s.userId)?.email ?? '-',
-            classId: String(classroom.id ?? '')
+            classId: String(safeClassroom.id ?? '')
           }));
 
         const classResources: Resource[] = safeResources.map(r => ({
@@ -364,25 +421,25 @@ export class ViewStateService {
           {
             label: 'Total Classes',
             value: safeClasses.length,
-            icon: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25"/></svg>`,
+            icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" class="w-11 h-11"><rect x="10" y="8" width="44" height="48" rx="6" fill="currentColor" opacity="0.15"/><path d="M20 22h24M20 30h20M20 38h16" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><circle cx="44" cy="44" r="10" fill="currentColor" opacity="0.25"/><path d="M40 44l3 3 5-6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>`,
             color: '#2563eb'
           },
           {
             label: 'Teachers',
             value: safeTeachers.length,
-            icon: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"/></svg>`,
+            icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" class="w-11 h-11"><circle cx="32" cy="20" r="12" fill="currentColor" opacity="0.2"/><path d="M12 56c0-8 8-16 20-16s20 8 20 16" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="52" cy="12" r="8" fill="currentColor" opacity="0.3"/><path d="M48 14l3-3 4 3" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
             color: '#7c3aed'
           },
           {
             label: 'Students',
             value: safeStudents.length,
-            icon: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z"/></svg>`,
+            icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" class="w-11 h-11"><circle cx="20" cy="20" r="10" fill="currentColor" opacity="0.2"/><path d="M6 56c0-6 6-14 14-14s14 8 14 14" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="44" cy="20" r="10" fill="currentColor" opacity="0.2"/><path d="M30 56c0-6 6-14 14-14s14 8 14 14" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round"/></svg>`,
             color: '#059669'
           },
           {
             label: 'Resources',
             value: safeResources.length,
-            icon: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"/></svg>`,
+            icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" class="w-11 h-11"><rect x="8" y="4" width="48" height="56" rx="6" fill="currentColor" opacity="0.15"/><path d="M18 18h28M18 26h24M18 34h20M18 42h16" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><rect x="40" y="46" width="12" height="10" rx="2" fill="currentColor" opacity="0.3"/></svg>`,
             color: '#d97706'
           }
         ]);
@@ -402,7 +459,7 @@ export class ViewStateService {
     this.attendanceSetupError.set('');
 
     const requests = {
-      classes: this.classroomService.getAll().pipe(timeout(10000), catchError(() => of([]))),
+      classes: (isAdmin ? this.classroomService.getAll() : this.getClassroomsForCurrentRole()).pipe(timeout(10000), catchError(() => of([]))),
       teachers: isAdmin ? this.teacherService.getAll().pipe(timeout(10000), catchError(() => of([]))) : of([]),
       users: isAdmin ? this.userService.getAll().pipe(timeout(10000), catchError(() => of([]))) : of([])
     };
@@ -452,10 +509,12 @@ export class ViewStateService {
       [classId]: { loading: true, error: '', records: [] }
     }));
 
+    const canReadUsers = this.authService.role() === 'ADMIN';
+
     forkJoin({
       enrollments: this.enrollmentService.getByClass(classId).pipe(timeout(10000), catchError(() => of([]))),
       students: this.studentService.getAll().pipe(timeout(10000), catchError(() => of([]))),
-      users: this.userService.getAll().pipe(timeout(10000), catchError(() => of([]))),
+      users: (canReadUsers ? this.userService.getAll() : of([])).pipe(timeout(10000), catchError(() => of([]))),
       records: this.attendanceRecordService.getByClass(classId).pipe(timeout(10000), catchError(() => of([])))
     }).subscribe({
       next: ({ enrollments, students, users, records }) => {
@@ -474,7 +533,7 @@ export class ViewStateService {
           const existing = recordByStudent.get(enrollment.studentId);
           return {
             studentId: String(enrollment.studentId),
-            studentName: user?.fullName ?? 'Student',
+            studentName: user?.fullName ?? student?.studentCode ?? `Student #${enrollment.studentId}`,
             present: existing ? existing.status === 'PRESENT' : true,
             justified: existing?.justified ?? false,
             reason: existing?.reason ?? ''
@@ -501,6 +560,7 @@ export class ViewStateService {
 
     this.chatError.set('');
     this.chatMessages.update(list => [...list, { role: 'user', content: message, mode, timestamp: new Date() }]);
+    this.persistChatForCurrentUser();
     this.chatLoading.set(true);
 
     const watchdog = setTimeout(() => {
@@ -533,6 +593,7 @@ export class ViewStateService {
             timestamp: new Date()
           }
         ]);
+        this.persistChatForCurrentUser();
       },
       error: err => {
         const status = typeof err?.status === 'number' ? err.status : 0;
@@ -549,6 +610,152 @@ export class ViewStateService {
     this.chatError.set('');
     this.chatFallbackBanner.set(false);
     this.chatLoading.set(false);
+    this.persistChatForCurrentUser();
+  }
+
+  private chatStorageKey(): string | null {
+    const userId = this.authService.userId();
+    if (!userId) return null;
+    return `${ViewStateService.CHAT_STORAGE_PREFIX}${userId}`;
+  }
+
+  private persistChatForCurrentUser(): void {
+    const key = this.chatStorageKey();
+    if (!key) return;
+
+    try {
+      localStorage.setItem(key, JSON.stringify(this.chatMessages()));
+    } catch {
+    }
+  }
+
+  private getClassroomsForCurrentRole(): Observable<any[]> {
+    const role = this.authService.role();
+    const authStudentIdRaw = this.authService.studentId();
+    const authStudentId = Number(authStudentIdRaw);
+    if (role === 'ADMIN') {
+      return this.classroomService.getAll().pipe(catchError(() => of([])));
+    }
+    if (Number.isFinite(authStudentId) && authStudentId > 0) {
+      return forkJoin({
+        enrollments: this.enrollmentService.getByStudent(authStudentId).pipe(catchError(() => of([]))),
+        classes: this.classroomService.getAll().pipe(catchError(() => of([])))
+      }).pipe(
+        map(({ enrollments, classes }) => {
+          const enrolledClassIds = new Set(
+            (Array.isArray(enrollments) ? enrollments : [])
+              .filter(e => e?.status !== 'ENDED')
+              .map(e => e.classRoomId)
+          );
+          return (Array.isArray(classes) ? classes : []).filter(c => enrolledClassIds.has(c.id));
+        })
+      );
+    }
+
+    if (role !== 'TEACHER' && role !== 'STUDENT') {
+      return this.classroomService.getAll().pipe(catchError(() => of([])));
+    }
+
+    if (role === 'STUDENT') {
+      return this.resolveCurrentStudentId().pipe(
+        switchMap(studentId => {
+          if (!studentId) {
+            this.classesError.set('Student profile not found for current account.');
+            return of([]);
+          }
+
+          return forkJoin({
+            enrollments: this.enrollmentService.getByStudent(studentId).pipe(catchError(() => of([]))),
+            classes: this.classroomService.getAll().pipe(catchError(() => of([])))
+          }).pipe(
+            map(({ enrollments, classes }) => {
+              const enrolledClassIds = new Set(
+                (Array.isArray(enrollments) ? enrollments : [])
+                  .filter(e => e?.status !== 'ENDED')
+                  .map(e => e.classRoomId)
+              );
+              return (Array.isArray(classes) ? classes : []).filter(c => enrolledClassIds.has(c.id));
+            })
+          );
+        })
+      );
+    }
+
+    return this.resolveCurrentTeacherId().pipe(
+      switchMap(teacherId => {
+        if (!teacherId) {
+          this.classesError.set('Teacher profile not found for current account.');
+          return of([]);
+        }
+
+        return this.classroomService.getAll().pipe(
+          catchError(() => of([])),
+          switchMap(classes => {
+            const safeClasses = Array.isArray(classes) ? classes : [];
+            if (!safeClasses.length) {
+              return of([]);
+            }
+
+            return forkJoin(
+              safeClasses.map(cls =>
+                this.ownershipService.getByClass(cls.id).pipe(
+                  catchError(() => of([])),
+                  map(ownerships => ({ cls, ownerships: Array.isArray(ownerships) ? ownerships : [] }))
+                )
+              )
+            ).pipe(
+              map(items =>
+                items
+                  .filter(item => item.ownerships.some(o => o.teacherId === teacherId && o.status !== 'ENDED'))
+                  .map(item => item.cls)
+              )
+            );
+          })
+        );
+      })
+    );
+  }
+
+  private resolveCurrentTeacherId(): Observable<number | null> {
+    const fromAuth = this.authService.teacherId();
+    if (typeof fromAuth === 'number' && fromAuth > 0) {
+      return of(fromAuth);
+    }
+
+    const currentUserId = this.authService.userId();
+    if (!currentUserId) {
+      return of(null);
+    }
+
+    return this.teacherService.getAll().pipe(
+      map(teachers => {
+        const list = Array.isArray(teachers) ? teachers : [];
+        const teacher = list.find(t => t.userId === currentUserId);
+        return teacher?.id ?? null;
+      }),
+      catchError(() => of(null))
+    );
+  }
+
+  private resolveCurrentStudentId(): Observable<number | null> {
+    const fromAuth = this.authService.studentId();
+    if (typeof fromAuth === 'number' && fromAuth > 0) {
+      return of(fromAuth);
+    }
+
+    const currentUserId = this.authService.userId();
+    if (!currentUserId) {
+      return of(null);
+    }
+
+    return this.studentService.getAll().pipe(
+      map(students => {
+        const list = Array.isArray(students) ? students : [];
+        const student = list.find(s => s.userId === currentUserId);
+        return student?.id ?? null;
+      }),
+      catchError(() => of(null))
+    );
   }
 
   loadUsers(force = false): void {

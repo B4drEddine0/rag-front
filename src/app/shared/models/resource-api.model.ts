@@ -23,7 +23,5 @@ export interface ResourceDetailsDto {
   fileReadUrl: string | null;
   official: boolean;
 }
-
-// Compatibility aliases for existing imports.
 export type ResourceDTO = ResourceDto;
 export type ResourceDetailsDTO = ResourceDetailsDto;

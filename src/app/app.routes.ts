@@ -23,13 +23,15 @@ export const routes: Routes = [
   },
   {
     path: 'classes/:id',
-    canActivate: [authGuard],
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['ADMIN', 'TEACHER'] },
     loadComponent: () =>
       import('./pages/class-details/class-details.component').then(m => m.ClassDetailsComponent)
   },
   {
     path: 'attendance',
-    canActivate: [authGuard],
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['ADMIN', 'TEACHER'] },
     loadComponent: () =>
       import('./pages/attendance/attendance.component').then(m => m.AttendanceComponent)
   },

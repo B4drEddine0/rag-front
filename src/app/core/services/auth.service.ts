@@ -19,6 +19,8 @@ export class AuthService {
   readonly role = computed(() => this._user()?.role ?? null);
   readonly token = computed(() => this._user()?.token ?? null);
   readonly userId = computed(() => this._user()?.userId ?? null);
+  readonly teacherId = computed(() => this._user()?.teacherId ?? null);
+  readonly studentId = computed(() => this._user()?.studentId ?? null);
   readonly fullName = computed(() => this._user()?.fullName ?? null);
 
   login(req: LoginRequest): Observable<AuthResponse> {

@@ -15,6 +15,8 @@ export interface RegisterRequest {
 export interface AuthResponse {
   token: string;
   userId: number;
+  teacherId?: number;
+  studentId?: number;
   fullName: string;
   email: string;
   role: ApiRole;
