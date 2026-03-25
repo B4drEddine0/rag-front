@@ -1,0 +1,267 @@
+.auth-decoration {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+
+.auth-decoration::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #fffaf5 0%, #fff5eb 50%, #fffae6 100%);
+}
+
+
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.7;
+  animation: float 20s ease-in-out infinite;
+}
+
+.blob-1 {
+  width: 500px;
+  height: 500px;
+  background: linear-gradient(135deg, #ff8c42 0%, #ffb347 50%, #ffc971 100%);
+  top: -100px;
+  right: -150px;
+  animation-delay: 0s;
+}
+
+.blob-2 {
+  width: 400px;
+  height: 400px;
+  background: linear-gradient(135deg, #ffae42 0%, #ffd194 50%, #ffe4c4 100%);
+  bottom: -80px;
+  left: -100px;
+  animation-delay: -5s;
+}
+
+.blob-3 {
+  width: 300px;
+  height: 300px;
+  background: linear-gradient(135deg, #ff7f50 0%, #ffa07a 50%, #ffdab9 100%);
+  top: 50%;
+  left: 30%;
+  transform: translate(-50%, -50%);
+  animation-delay: -10s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  25% {
+    transform: translate(30px, -30px) scale(1.05);
+  }
+  50% {
+    transform: translate(-20px, 20px) scale(0.95);
+  }
+  75% {
+    transform: translate(20px, 10px) scale(1.02);
+  }
+}
+
+
+.glass-card {
+  position: relative;
+  width: 380px;
+  height: 480px;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 
+    0 8px 32px rgba(255, 140, 66, 0.1),
+    0 2px 8px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  overflow: hidden;
+  z-index: 10;
+  animation: cardFloat 6s ease-in-out infinite;
+}
+
+@keyframes cardFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.glass-card-inner {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+
+.card-decoration {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+
+.circle {
+  position: absolute;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(255, 140, 66, 0.3) 0%, rgba(255, 179, 71, 0.1) 100%);
+  border: 1px solid rgba(255, 179, 71, 0.2);
+}
+
+.circle-1 {
+  width: 120px;
+  height: 120px;
+  top: 20px;
+  left: 20px;
+  animation: pulse 4s ease-in-out infinite;
+}
+
+.circle-2 {
+  width: 80px;
+  height: 80px;
+  top: 160px;
+  right: 30px;
+  animation: pulse 4s ease-in-out infinite;
+  animation-delay: -1s;
+}
+
+.circle-3 {
+  width: 60px;
+  height: 60px;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: pulse 4s ease-in-out infinite;
+  animation-delay: -2s;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+
+.line {
+  position: absolute;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255, 140, 66, 0.3), transparent);
+  border-radius: 2px;
+}
+
+.line-1 {
+  width: 150px;
+  top: 80px;
+  left: 40px;
+  animation: lineMove 5s ease-in-out infinite;
+}
+
+.line-2 {
+  width: 100px;
+  top: 240px;
+  left: 60px;
+  animation: lineMove 5s ease-in-out infinite;
+  animation-delay: -1.5s;
+}
+
+.line-3 {
+  width: 180px;
+  bottom: 160px;
+  right: 20px;
+  animation: lineMove 5s ease-in-out infinite;
+  animation-delay: -3s;
+}
+
+@keyframes lineMove {
+  0%, 100% {
+    opacity: 0.3;
+    transform: translateX(0);
+  }
+  50% {
+    opacity: 0.5;
+    transform: translateX(10px);
+  }
+}
+
+
+.card-decoration::before {
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: rgba(255, 140, 66, 0.4);
+  border-radius: 50%;
+  top: 200px;
+  left: 30px;
+  box-shadow: 
+    40px 80px 0 rgba(255, 179, 71, 0.3),
+    80px -40px 0 rgba(255, 200, 113, 0.25),
+    120px 120px 0 rgba(255, 160, 80, 0.2);
+  animation: dotsPulse 3s ease-in-out infinite;
+}
+
+.card-decoration::after {
+  content: '';
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: rgba(255, 140, 66, 0.5);
+  border-radius: 50%;
+  bottom: 60px;
+  right: 60px;
+  box-shadow: 
+    -30px -20px 0 rgba(255, 179, 71, 0.35),
+    20px -30px 0 rgba(255, 200, 113, 0.2);
+  animation: dotsPulse 3s ease-in-out infinite;
+  animation-delay: -1.5s;
+}
+
+@keyframes dotsPulse {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+
+@media (max-width: 768px) {
+  .glass-card {
+    width: 300px;
+    height: 380px;
+  }
+  
+  .blob-1 {
+    width: 300px;
+    height: 300px;
+  }
+  
+  .blob-2 {
+    width: 250px;
+    height: 250px;
+  }
+  
+  .blob-3 {
+    width: 200px;
+    height: 200px;
+  }
+}

@@ -1,111 +1,114 @@
-<div class="flex items-start justify-between mb-6 flex-wrap gap-4">
-  <app-page-header title="Resources" subtitle="Browse and manage school resources and documents" />
-  <button (click)="toggleUploadForm()" class="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold rounded-xl transition-colors"
-          [class]="showUploadForm ? 'bg-slate-100 text-slate-700 hover:bg-slate-200' : 'bg-blue-600 text-white hover:bg-blue-700'">
-    @if (showUploadForm) {
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-      </svg>
-      Cancel
-    } @else {
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" />
-      </svg>
-      Upload Resource
-    }
-  </button>
-</div>
-
-@if (showUploadForm) {
-  <div class="p-5 bg-white rounded-2xl border border-blue-200 shadow-sm mb-6">
-    <div class="flex items-center gap-2.5 mb-4">
-      <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-50 text-blue-600">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" />
+<div class="resources-page">
+  
+  <div class="page-header">
+    <app-page-header title="Resources" subtitle="Browse and manage school resources and documents" />
+    <button (click)="toggleUploadForm()" class="btn-primary"
+            [class.btn-secondary]="showUploadForm">
+      @if (showUploadForm) {
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
         </svg>
-      </div>
-      <h2 class="text-lg font-semibold text-slate-900 m-0">Upload New Resource</h2>
-    </div>
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
-      <div>
-        <label class="block text-sm font-medium text-slate-700 mb-1">Title</label>
-        <input [(ngModel)]="newTitle" placeholder="Resource title..."
-               class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100" />
-      </div>
-      <div>
-        <label class="block text-sm font-medium text-slate-700 mb-1">Class room ID (optional)</label>
-        <input [(ngModel)]="newClassRoomId" type="number" min="1" placeholder="e.g. 1"
-               class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100" />
-      </div>
-    </div>
-    <div class="mb-3">
-      <label class="block text-sm font-medium text-slate-700 mb-1">File</label>
-      <input type="file" (change)="onFileSelected($event)"
-             class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100" />
-    </div>
-    <div class="mb-3 flex items-center gap-2">
-      <input id="official" type="checkbox" [(ngModel)]="newIsOfficial" class="h-4 w-4" />
-      <label for="official" class="text-sm text-slate-700">Official resource</label>
-    </div>
-    <div class="flex justify-end">
-      <button (click)="submitUpload()" [disabled]="uploading || !newTitle.trim() || !selectedFile"
-              class="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white text-sm font-semibold rounded-xl hover:bg-blue-700 transition-colors disabled:opacity-50">
+        Cancel
+      } @else {
         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" />
         </svg>
-        {{ uploading ? 'Uploading...' : 'Upload' }}
-      </button>
-    </div>
-  </div>
-}
-
-@if (resources.length > 0) {
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-    @for (res of resources; track res.id) {
-      <app-resource-card
-        [title]="res.title"
-        [type]="res.type"
-        [description]="res.description"
-        [uploadedBy]="res.uploadedBy"
-        [date]="res.date"
-        [showDelete]="isAdmin"
-        (viewClicked)="viewFile(res)"
-        (deleteClicked)="deleteResource(res.id)" />
-    }
-  </div>
-}
-
-@if (previewOpen) {
-  <div class="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
-    <div class="w-full max-w-5xl max-h-[90vh] bg-white rounded-2xl overflow-hidden shadow-xl">
-      <div class="flex items-center justify-between px-4 py-3 border-b border-slate-200">
-        <h3 class="text-sm font-semibold text-slate-800">{{ previewTitle }}</h3>
-        <button (click)="closePreview()" class="text-slate-500 hover:text-slate-800">Close</button>
-      </div>
-      <div class="p-3 h-[75vh] overflow-auto">
-        @if (previewMode === 'pdf') {
-          <iframe [src]="previewResourceUrl" class="w-full h-full rounded-lg border border-slate-200" title="PDF preview"></iframe>
-        } @else if (previewMode === 'image') {
-          <img [src]="previewUrl" alt="Resource preview" class="max-w-full max-h-full mx-auto" />
-        }
-      </div>
-    </div>
-  </div>
-}
-
-@if (loading) {
-  <div class="flex items-center justify-center py-16 text-slate-400">
-    <svg class="animate-spin w-6 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
-    </svg>
-    Loading resources...
-  </div>
-} @else if (error) {
-  <div class="flex flex-col items-center justify-center py-16 text-center">
-    <p class="text-red-500 font-medium mb-3">{{ error }}</p>
-    <button (click)="loadResources()" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors">
-      Retry
+        Upload Resource
+      }
     </button>
   </div>
-}
+
+  @if (showUploadForm) {
+    <div class="upload-card">
+      <div class="upload-header">
+        <div class="header-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" />
+          </svg>
+        </div>
+        <h2 class="upload-title">Upload New Resource</h2>
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Title</label>
+          <input [(ngModel)]="newTitle" placeholder="Resource title..."
+                 class="form-input" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Class room ID (optional)</label>
+          <input [(ngModel)]="newClassRoomId" type="number" min="1" placeholder="e.g. 1"
+                 class="form-input" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">File</label>
+        <input type="file" (change)="onFileSelected($event)"
+               class="form-input" />
+      </div>
+      <div class="checkbox-group">
+        <input id="official" type="checkbox" [(ngModel)]="newIsOfficial" class="checkbox" />
+        <label for="official" class="checkbox-label">Official resource</label>
+      </div>
+      <div class="form-actions">
+        <button (click)="submitUpload()" [disabled]="uploading || !newTitle.trim() || !selectedFile"
+                class="btn-primary">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" />
+          </svg>
+          {{ uploading ? 'Uploading...' : 'Upload' }}
+        </button>
+      </div>
+    </div>
+  }
+
+  @if (resources.length > 0) {
+    <div class="resources-grid">
+      @for (res of resources; track res.id) {
+        <app-resource-card
+          [title]="res.title"
+          [type]="res.type"
+          [description]="res.description"
+          [uploadedBy]="res.uploadedBy"
+          [date]="res.date"
+          [showDelete]="isAdmin"
+          (viewClicked)="viewFile(res)"
+          (deleteClicked)="deleteResource(res.id)" />
+      }
+    </div>
+  }
+
+  @if (previewOpen) {
+    <div class="modal-overlay">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title">{{ previewTitle }}</h3>
+          <button (click)="closePreview()" class="modal-close">Close</button>
+        </div>
+        <div class="modal-body">
+          @if (previewMode === 'pdf') {
+            <iframe [src]="previewResourceUrl" class="preview-iframe" title="PDF preview"></iframe>
+          } @else if (previewMode === 'image') {
+            <img [src]="previewUrl" alt="Resource preview" class="preview-image" />
+          }
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (loading) {
+    <div class="loading-state">
+      <svg class="spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+      </svg>
+      Loading resources...
+    </div>
+  } @else if (error) {
+    <div class="error-state">
+      <p class="error-message">{{ error }}</p>
+      <button (click)="loadResources()" class="btn-primary">
+        Retry
+      </button>
+    </div>
+  }
+</div>

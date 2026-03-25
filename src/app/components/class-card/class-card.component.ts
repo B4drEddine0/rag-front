@@ -16,6 +16,7 @@ export class ClassCardComponent {
   @Input() teachersCount = 0;
   @Input() resourcesCount = 0;
   @Input() showAdminActions = false;
+  @Input() showDetailsAction = true;
 
   @Output() editClicked = new EventEmitter<void>();
   @Output() deleteClicked = new EventEmitter<void>();

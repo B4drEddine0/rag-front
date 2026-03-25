@@ -1,36 +1,184 @@
-<app-page-header title="Dashboard" subtitle="Overview of school operations and key metrics" />
 
-@if (loading) {
-  <div class="flex items-center justify-center py-16 text-slate-400">
-    <svg class="animate-spin w-6 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
-    </svg>
-    Loading dashboard...
-  </div>
-} @else if (error) {
-  <div class="flex flex-col items-center justify-center py-16 text-center">
-    <p class="text-red-500 font-medium">{{ error }}</p>
-  </div>
-} @else {
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-9">
-    @for (stat of stats; track stat.label) {
-      <app-stat-card [label]="stat.label" [value]="stat.value" [icon]="stat.icon" [color]="stat.color" />
-    }
-  </div>
-}
+<div class="dashboard-premium">
 
-<div>
-  <h2 class="text-lg font-semibold text-slate-900 mb-4">Quick Actions</h2>
-  <div class="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
-    <app-action-card icon='<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25"/></svg>' label="View Classes" route="/classes" />
-    <app-action-card icon='<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M11.35 3.836c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m8.9-4.414c.376.023.75.05 1.124.08 1.131.094 1.976 1.057 1.976 2.192V16.5A2.25 2.25 0 0 1 18 18.75h-2.25m-7.5-10.5H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V18.75m-7.5-10.5h6.375c.621 0 1.125.504 1.125 1.125v9.375m-8.25-3 1.5 1.5 3-3.75"/></svg>' label="Take Attendance" route="/attendance" />
-    <app-action-card icon='<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 0 1 4.5 9.75h15A2.25 2.25 0 0 1 21.75 12v.75m-8.69-6.44-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v8.25m19.5 0v2.25A2.25 2.25 0 0 1 19.5 18.75h-15a2.25 2.25 0 0 1-2.25-2.25v-2.25"/></svg>' label="Browse Resources" route="/resources" />
-    <app-action-card icon='<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456Z"/></svg>' label="Ask AI Assistant" route="/chat" />
-    @if (isAdmin) {
-      <app-action-card icon='<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.742-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.578-5.963-1.584A6.062 6.062 0 0 1 6 18.75c0-.226.012-.448.037-.666m11.963 0a11.947 11.947 0 0 1-2.963 1.584m0 0a5.995 5.995 0 0 0-.963-3.198m0 0a5.995 5.995 0 0 0-.963 3.198m0 0A11.95 11.95 0 0 1 6.037 19.416M15 7.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0A2.25 2.25 0 1 1 3 10.5a2.25 2.25 0 0 1 4.5 0Z"/></svg>' label="Manage Users" route="/users" />
-      <app-action-card icon='<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M3.75 6.75h16.5A1.5 1.5 0 0 1 21.75 8.25v9a1.5 1.5 0 0 1-1.5 1.5H3.75a1.5 1.5 0 0 1-1.5-1.5v-9a1.5 1.5 0 0 1 1.5-1.5Z"/></svg>' label="Manage Enrollments" route="/enrollments" />
-      <app-action-card icon='<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 18.75h-9A2.25 2.25 0 0 1 5.25 16.5v-9A2.25 2.25 0 0 1 7.5 5.25h9A2.25 2.25 0 0 1 18.75 7.5v9A2.25 2.25 0 0 1 16.5 18.75ZM9 9.75h6M9 12h6m-6 2.25h3"/></svg>' label="Manage Ownerships" route="/ownerships" />
+  <div class="dashboard-header">
+    <div class="dashboard-header-top">
+      <h1>Dashboard</h1>
+      <span class="dashboard-badge">Overview</span>
+    </div>
+    <p>Track your classes, attendance, and resources in one place.</p>
+  </div>
+
+
+  @if (loading && showStats) {
+    <div class="loading-state">
+      <div class="loading-grid">
+        @for (i of [1,2,3,4]; track i) {
+          <div class="skeleton-card"></div>
+        }
+      </div>
+    </div>
+  } @else if (error) {
+    <div class="error-state">
+      <div class="error-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+        </svg>
+      </div>
+      <p>{{ error }}</p>
+    </div>
+  } @else {
+    @if (showStats) {
+      
+      <div class="stats-section">
+        <div class="stats-grid">
+          @for (stat of stats; track stat.label; let i = $index) {
+            <div class="stat-card-wrap" [style.animation-delay]="i * 0.1 + 's'">
+              <app-stat-card
+                [label]="stat.label"
+                [value]="stat.value"
+                [icon]="stat.icon"
+                [color]="stat.color" />
+            </div>
+          }
+        </div>
+      </div>
     }
+  }
+
+  
+  <div class="actions-section" [class.actions-section--spaced]="!showStats">
+    <div class="section-header">
+      <div>
+        <h2 class="section-title">Quick Actions</h2>
+        <p class="section-subtitle">Access frequently used features</p>
+      </div>
+      <span class="section-pill">Quick Access</span>
+    </div>
+    
+    <div class="actions-grid">
+      <a routerLink="/classes" class="action-card">
+        <div class="action-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
+          </svg>
+        </div>
+        <div class="action-content">
+          <span class="action-title">View Classes</span>
+          <span class="action-desc">{{ isStudent ? 'View your enrolled classes' : 'Browse all classes' }}</span>
+        </div>
+        <div class="action-arrow">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+          </svg>
+        </div>
+      </a>
+
+      @if (!isStudent) {
+        <a routerLink="/attendance" class="action-card">
+          <div class="action-icon emerald">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M11.35 3.836c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m8.9-4.414c.376.023.75.05 1.124.08 1.131.094 1.976 1.057 1.976 2.192V16.5A2.25 2.25 0 0 1 18 18.75h-2.25m-7.5-10.5H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V18.75m-7.5-10.5h6.375c.621 0 1.125.504 1.125 1.125v9.375m-8.25-3 1.5 1.5 3-3.75" />
+            </svg>
+          </div>
+          <div class="action-content">
+            <span class="action-title">Take Attendance</span>
+            <span class="action-desc">Record daily attendance</span>
+          </div>
+          <div class="action-arrow">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+            </svg>
+          </div>
+        </a>
+      }
+
+      <a routerLink="/resources" class="action-card">
+        <div class="action-icon violet">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 0 1 4.5 9.75h15A2.25 2.25 0 0 1 21.75 12v.75m-8.69-6.44-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v8.25m19.5 0v2.25A2.25 2.25 0 0 1 19.5 18.75h-15a2.25 2.25 0 0 1-2.25-2.25v-2.25" />
+          </svg>
+        </div>
+        <div class="action-content">
+          <span class="action-title">Browse Resources</span>
+          <span class="action-desc">Access documents</span>
+        </div>
+        <div class="action-arrow">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+          </svg>
+        </div>
+      </a>
+
+      <a routerLink="/chat" class="action-card">
+        <div class="action-icon amber">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456Z" />
+          </svg>
+        </div>
+        <div class="action-content">
+          <span class="action-title">Ask AI Assistant</span>
+          <span class="action-desc">Get instant answers</span>
+        </div>
+        <div class="action-arrow">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+          </svg>
+        </div>
+      </a>
+
+      @if (isAdmin) {
+        <a routerLink="/users" class="action-card admin">
+          <div class="action-icon rose">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.742-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.578-5.963-1.584A6.062 6.062 0 0 1 6 18.75c0-.226.012-.448.037-.666m11.963 0a11.947 11.947 0 0 1-2.963 1.584m0 0a5.995 5.995 0 0 0-.963-3.198m0 0a5.995 5.995 0 0 0-.963 3.198m0 0A11.95 11.95 0 0 1 6.037 19.416M15 7.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0A2.25 2.25 0 1 1 3 10.5a2.25 2.25 0 0 1 4.5 0Z"/>
+            </svg>
+          </div>
+          <div class="action-content">
+            <span class="action-title">Manage Users</span>
+            <span class="action-desc">Admin controls</span>
+          </div>
+          <div class="action-arrow">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+            </svg>
+          </div>
+        </a>
+
+        <a routerLink="/enrollments" class="action-card admin">
+          <div class="action-icon cyan">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 11.25 11.625v2.625m8.25 0v4.875c0 .621-.504 1.125-1.125 1.125H5.625A1.125 1.125 0 0 1 4.5 19.125V14.25m15 0h-15m15 0a1.125 1.125 0 0 0 1.125-1.125V8.625A2.625 2.625 0 0 0 18 6H6a2.625 2.625 0 0 0-2.625 2.625v4.5A1.125 1.125 0 0 0 4.5 14.25"/>
+            </svg>
+          </div>
+          <div class="action-content">
+            <span class="action-title">Enrollments</span>
+            <span class="action-desc">Manage students</span>
+          </div>
+          <div class="action-arrow">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+            </svg>
+          </div>
+        </a>
+
+        <a routerLink="/ownerships" class="action-card admin">
+          <div class="action-icon orange">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.59 14.37a6 6 0 0 1-5.84 0m5.84 0a6 6 0 1 0-5.84 0m5.84 0A14.923 14.923 0 0 1 18.75 19.5m-9-5.13A14.923 14.923 0 0 0 5.25 19.5"/>
+            </svg>
+          </div>
+          <div class="action-content">
+            <span class="action-title">Ownerships</span>
+            <span class="action-desc">Assign teachers</span>
+          </div>
+          <div class="action-arrow">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+            </svg>
+          </div>
+        </a>
+      }
+    </div>
   </div>
 </div>

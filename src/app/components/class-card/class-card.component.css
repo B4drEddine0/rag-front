@@ -3,8 +3,8 @@
 	position: relative;
 	padding: 18px;
 	border-radius: 20px;
-	border: 1px solid #e2e8f0;
-	background: linear-gradient(180deg, #ffffff, #f8fafc);
+	border: 1px solid #e7e5e4;
+	background: #ffffff;
 	box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
 	transition: all 0.28s ease;
 	overflow: hidden;
@@ -12,15 +12,15 @@
 
 .class-card:hover {
 	transform: translateY(-5px);
-	border-color: #c7d2fe;
-	box-shadow: 0 22px 40px rgba(99, 102, 241, 0.2);
+	border-color: #d6d3d1;
+	box-shadow: 0 18px 34px rgba(15, 23, 42, 0.12);
 }
 
 .class-card__accent {
 	position: absolute;
 	inset: 0 0 auto 0;
-	height: 5px;
-	background: linear-gradient(90deg, #6366f1, #8b5cf6);
+	height: 3px;
+	background: #e7e5e4;
 }
 
 .class-card__head {
@@ -37,15 +37,15 @@
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	background: linear-gradient(135deg, #e0e7ff, #ede9fe);
-	color: #4f46e5;
+	background: #f5f5f4;
+	color: #57534e;
 	flex-shrink: 0;
 }
 
 .class-card__title {
 	margin: 0;
 	font-size: 1.04rem;
-	color: #0f172a;
+	color: #1c1917;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -56,8 +56,8 @@
 	margin-top: 4px;
 	padding: 4px 10px;
 	border-radius: 999px;
-	background: #eef2ff;
-	color: #4338ca;
+	background: #f5f5f4;
+	color: #57534e;
 	font-size: 0.72rem;
 	font-weight: 700;
 }
@@ -72,13 +72,13 @@
 .class-card__stats article {
 	padding: 10px;
 	border-radius: 12px;
-	border: 1px solid #e2e8f0;
+	border: 1px solid #e7e5e4;
 	background: #fff;
 }
 
 .class-card__stats span {
 	display: block;
-	color: #64748b;
+	color: #78716c;
 	font-size: 0.7rem;
 	text-transform: uppercase;
 	letter-spacing: 0.04em;
@@ -87,12 +87,12 @@
 .class-card__stats strong {
 	display: block;
 	margin-top: 3px;
-	color: #1e293b;
+	color: #1c1917;
 	font-size: 1rem;
 }
 
 .class-card__footer {
-	border-top: 1px solid #e2e8f0;
+	border-top: 1px solid #e7e5e4;
 	padding-top: 11px;
 	display: flex;
 	align-items: center;
@@ -104,7 +104,7 @@
 	display: inline-flex;
 	align-items: center;
 	gap: 5px;
-	color: #4f46e5;
+	color: #ea580c;
 	font-size: 0.82rem;
 	font-weight: 700;
 }
@@ -132,11 +132,11 @@
 }
 
 .class-card__btn--edit {
-	background: #dbeafe;
-	color: #1e40af;
+	background: #ffedd5;
+	color: #c2410c;
 }
 
 .class-card__btn--delete {
 	background: #fee2e2;
-	color: #b91c1c;
+	color: #dc2626;
 }

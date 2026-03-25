@@ -1,6 +1,7 @@
-import { Component, effect, ElementRef, inject, ViewChild } from '@angular/core';
+import { Component, effect, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ViewStateService } from '../../core/services/view-state.service';
+import { AuthService } from '../../core/services/auth.service';
 import { ChatMode } from '../../shared/models/chat-api.model';
 import { ChatMessage } from '../../shared/models/chat.model';
 import { ChatBubbleComponent } from '../../components/chat-bubble/chat-bubble.component';
@@ -12,8 +13,9 @@ import { ChatBubbleComponent } from '../../components/chat-bubble/chat-bubble.co
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.css'
 })
-export class ChatComponent {
+export class ChatComponent implements OnInit {
   private readonly viewState = inject(ViewStateService);
+  private readonly authService = inject(AuthService);
 
   @ViewChild('chatContainer') chatContainer!: ElementRef<HTMLDivElement>;
 
@@ -31,6 +33,20 @@ export class ChatComponent {
 
   userInput = '';
   selectedMode: ChatMode = 'DOCUMENTS';
+
+  get isStudent(): boolean {
+    return this.authService.role() === 'STUDENT';
+  }
+
+  get availableModes(): Array<{ label: string; value: ChatMode }> {
+    if (!this.isStudent) return this.modes;
+    return this.modes.filter(m => m.value !== 'STATS');
+  }
+
+  get availableQuickPrompts(): Array<{ mode: ChatMode; prompt: string }> {
+    if (!this.isStudent) return this.quickPrompts;
+    return this.quickPrompts.filter(p => p.mode !== 'STATS');
+  }
 
   get messages(): ChatMessage[] {
     return this.viewState.chatMessages();
@@ -55,9 +71,19 @@ export class ChatComponent {
     }
   });
 
+  ngOnInit(): void {
+    this.viewState.hydrateChatForCurrentUser();
+    if (this.isStudent && this.selectedMode === 'STATS') {
+      this.selectedMode = 'DOCUMENTS';
+    }
+  }
+
   send(): void {
     const text = this.userInput.trim();
     if (!text || this.loading) return;
+    if (this.isStudent && this.selectedMode === 'STATS') {
+      this.selectedMode = 'DOCUMENTS';
+    }
     this.userInput = '';
     this.viewState.sendChatMessage(text, this.selectedMode);
   }
@@ -70,7 +96,7 @@ export class ChatComponent {
   }
 
   quickAsk(mode: ChatMode, question: string): void {
-    this.selectedMode = mode;
+    this.selectedMode = this.isStudent && mode === 'STATS' ? 'DOCUMENTS' : mode;
     this.userInput = question;
     this.send();
   }

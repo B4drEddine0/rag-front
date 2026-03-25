@@ -1,4 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { ViewStateService, DashboardStatCard } from '../../core/services/view-state.service';
 import { AuthService } from '../../core/services/auth.service';
 import { StatCardComponent } from '../../components/stat-card/stat-card.component';
@@ -9,6 +10,7 @@ import { PageHeaderComponent } from '../../components/page-header/page-header.co
   selector: 'app-dashboard',
   standalone: true,
   imports: [
+    RouterLink,
     StatCardComponent,
     ActionCardComponent,
     PageHeaderComponent
@@ -34,6 +36,18 @@ export class DashboardComponent implements OnInit {
 
   get isAdmin(): boolean {
     return this.authService.role() === 'ADMIN';
+  }
+
+  get isTeacher(): boolean {
+    return this.authService.role() === 'TEACHER';
+  }
+
+  get isStudent(): boolean {
+    return this.authService.role() === 'STUDENT';
+  }
+
+  get showStats(): boolean {
+    return this.isAdmin;
   }
 
   ngOnInit(): void {

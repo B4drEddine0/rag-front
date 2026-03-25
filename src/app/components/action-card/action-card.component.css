@@ -5,14 +5,14 @@
 
 .action-card:hover {
 	transform: translateY(-4px);
-	border-color: #c7d2fe;
-	box-shadow: 0 16px 34px rgba(99, 102, 241, 0.16);
+	border-color: #fed7aa;
+	box-shadow: 0 16px 34px rgba(234, 88, 12, 0.16);
 }
 
 .action-card:hover .action-icon {
 	transform: scale(1.08);
-	background: linear-gradient(135deg, #e0e7ff, #ede9fe);
-	color: #4f46e5;
+	background: linear-gradient(135deg, #ffedd5, #fed7aa);
+	color: #ea580c;
 }
 
 .action-icon {

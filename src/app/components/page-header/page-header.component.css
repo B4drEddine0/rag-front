@@ -1,5 +1,9 @@
 .page-header {
 	position: relative;
+	min-height: 72px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
 }
 
 .page-header::after {
@@ -9,6 +13,6 @@
 	height: 4px;
 	margin-top: 10px;
 	border-radius: 999px;
-	background: linear-gradient(90deg, #6366f1, #8b5cf6);
+	background: linear-gradient(90deg, #ea580c, #f97316);
 	opacity: 0.45;
 }

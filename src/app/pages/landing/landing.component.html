@@ -1,112 +1,656 @@
-<!-- Navbar -->
-<header class="landing-nav-wrap sticky top-4 z-20 px-4 md:px-8">
-  <nav class="landing-nav mx-auto max-w-6xl flex items-center justify-between gap-4 px-4 py-3 md:px-6 md:py-3.5">
-    <a routerLink="/" class="inline-flex items-center gap-2.5 text-slate-900 font-bold no-underline">
-      <span class="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-blue-600 text-white shadow-md">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.627 48.627 0 0 1 12 20.904a48.627 48.627 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.606 50.606 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0 0v-3.675A55.378 55.378 0 0 1 12 8.443m-7.007 11.55A5.981 5.981 0 0 0 6.75 15.75v-1.5" />
-        </svg>
-      </span>
-      <span>SchoolAI</span>
-    </a>
-    <div class="hidden sm:flex gap-2">
-      <button (click)="scrollTo('features')" class="landing-nav-link">Features</button>
-      <button (click)="scrollTo('how-it-works')" class="landing-nav-link">How It Works</button>
-    </div>
-    <div class="flex gap-2">
-      <a routerLink="/login" class="px-4 py-2 text-sm font-medium text-slate-700 border border-slate-200 rounded-full hover:bg-slate-100 no-underline transition-colors">Login</a>
-      <a routerLink="/register" class="btn-premium no-underline">Register</a>
+
+<div class="landing-premium">
+  
+  <nav class="nav-glass">
+    <div class="nav-container">
+      <a routerLink="/" class="nav-brand">
+        <div class="brand-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.627 48.627 0 0 1 12 20.904a48.627 48.627 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.606 50.606 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0 0v-3.675A55.378 55.378 0 0 1 12 8.443m-7.007 11.55A5.981 5.981 0 0 0 6.75 15.75v-1.5" />
+          </svg>
+        </div>
+        <span class="brand-text">SchoolAI</span>
+      </a>
+      
+      <div class="nav-links">
+        <button (click)="scrollTo('features')" class="nav-link">Features</button>
+        <button (click)="scrollTo('how-it-works')" class="nav-link">How It Works</button>
+        <button (click)="scrollTo('testimonials')" class="nav-link">Testimonials</button>
+        <button (click)="scrollTo('pricing')" class="nav-link">Pricing</button>
+      </div>
+      
+      <div class="nav-actions">
+        <a routerLink="/login" class="btn-login">Sign In</a>
+        <a routerLink="/register" class="btn-cta">Get Started</a>
+      </div>
     </div>
   </nav>
-</header>
 
-<!-- Hero -->
-<section class="landing-hero pt-24 pb-20 px-6 md:px-12">
-  <div class="hero-grid max-w-6xl mx-auto">
-    <div>
-      <span class="inline-block mb-4 px-3 py-1.5 border border-indigo-200/70 rounded-full text-xs font-semibold text-indigo-700 bg-white/85">Academic Operations Assistant</span>
-      <h1 class="text-4xl sm:text-5xl font-bold text-slate-900 leading-tight m-0">Smart School Assistant for Premium Campus Operations</h1>
-      <p class="mt-3.5 mb-6 max-w-xl text-slate-600 text-lg">Get attendance intelligence, trusted document answers, and class management clarity with a polished dashboard experience.</p>
-      <div class="flex flex-wrap gap-3">
-        <a routerLink="/register" class="btn-premium no-underline">Get Started</a>
-        <a routerLink="/login" class="px-6 py-3 text-sm font-semibold text-slate-700 border border-slate-200 rounded-full hover:bg-slate-100 no-underline transition-colors">Live Demo</a>
+  
+  <section class="hero-section">
+    <div class="hero-container">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="badge-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456Z" />
+            </svg>
+          </span>
+          <span>AI-Powered School Management</span>
+        </div>
+        
+        <h1 class="hero-title">
+          <span class="title-line">Transform Your School</span>
+          <span class="title-line gradient-text">With Intelligent AI</span>
+        </h1>
+        
+        <p class="hero-description">
+          Streamline attendance, automate administrative tasks, and get instant answers 
+          from your documents — all powered by cutting-edge AI technology.
+        </p>
+        
+        <div class="hero-cta">
+          <a routerLink="/register" class="btn-cta-large">
+            Start Free Trial
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+            </svg>
+          </a>
+          <a routerLink="/login" class="btn-demo">
+            <div class="demo-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" />
+              </svg>
+            </div>
+            Watch Demo
+          </a>
+        </div>
+        
+        <div class="hero-stats">
+          <div class="stat-item">
+            <span class="stat-value">500+</span>
+            <span class="stat-label">Schools</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <span class="stat-value">50K+</span>
+            <span class="stat-label">Users</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <span class="stat-value">99.9%</span>
+            <span class="stat-label">Uptime</span>
+          </div>
+        </div>
       </div>
-      <div class="hero-metrics mt-7">
-        <div><strong>24/7</strong><span>Insights</span></div>
-        <div><strong>99%</strong><span>Attendance Traceability</span></div>
-        <div><strong>Secure</strong><span>Role-based Access</span></div>
-      </div>
-    </div>
-    <div class="hero-card">
-      <div class="hero-card-header">
-        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
-      </div>
-      <div class="hero-card-body">
-        <h3>Daily Academic Snapshot</h3>
-        <p>Class attendance and recent document intelligence at a glance.</p>
-        <div class="snapshot-grid">
-          <article><h4>Classes</h4><strong>12</strong></article>
-          <article><h4>Present</h4><strong>542</strong></article>
-          <article><h4>Absent</h4><strong>18</strong></article>
-          <article><h4>Resources</h4><strong>31</strong></article>
+      
+      
+      <div class="hero-visual">
+        <div class="hero-image-container">
+          <div class="hero-image-card">
+            <div class="image-header">
+              <div class="image-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </div>
+            <div class="image-content">
+              <div class="image-graphic">
+                <svg viewBox="0 0 500 400" class="hero-svg" xmlns="http://www.w3.org/2000/svg">
+                  
+                  <rect x="0" y="0" width="500" height="400" fill="#fffbeb"/>
+                  
+                  
+                  <rect x="0" y="320" width="500" height="80" fill="#f5f5f4"/>
+                  <line x1="0" y1="320" x2="500" y2="320" stroke="#e7e5e4" stroke-width="2"/>
+                  
+                  
+                  <rect x="40" y="40" width="220" height="140" rx="8" fill="#1c1917"/>
+                  <rect x="50" y="50" width="200" height="120" rx="4" fill="#292524"/>
+                  
+                  <text x="60" y="80" font-family="sans-serif" font-size="14" fill="#fef3c7">Welcome to Class!</text>
+                  <rect x="60" y="95" width="120" height="3" rx="1.5" fill="#a8a29e" opacity="0.5"/>
+                  <rect x="60" y="110" width="160" height="3" rx="1.5" fill="#a8a29e" opacity="0.5"/>
+                  <rect x="60" y="125" width="140" height="3" rx="1.5" fill="#a8a29e" opacity="0.5"/>
+                  <rect x="60" y="140" width="100" height="3" rx="1.5" fill="#a8a29e" opacity="0.5"/>
+                  
+                  
+                  <rect x="30" y="178" width="240" height="8" rx="2" fill="#57534e"/>
+                  <rect x="50" y="180" width="15" height="6" rx="1" fill="#fef3c7"/>
+                  <rect x="80" y="181" width="12" height="5" rx="1" fill="#fecaca"/>
+                  
+                  
+                  <g transform="translate(280, 120)">
+                    
+                    <rect x="30" y="140" width="18" height="60" rx="4" fill="#1c1917"/>
+                    <rect x="52" y="140" width="18" height="60" rx="4" fill="#1c1917"/>
+                    
+                    
+                    <rect x="20" y="50" width="60" height="100" rx="10" fill="#ea580c"/>
+                    <rect x="25" y="55" width="50" height="85" rx="8" fill="#f97316"/>
+                    
+                    
+                    <path d="M45 50 L50 80 L55 50" fill="#fff"/>
+                    <rect x="48" y="50" width="4" height="25" fill="#dc2626"/>
+                    <path d="M45 50 L50 55 L55 50" fill="#e5e7eb"/>
+                    
+                    
+                    <rect x="5" y="55" width="18" height="70" rx="8" fill="#ea580c"/>
+                    <circle cx="14" cy="125" r="10" fill="#fecaca"/>
+                    
+                    
+                    <rect x="77" y="55" width="18" height="70" rx="8" fill="#ea580c"/>
+                    <circle cx="86" cy="125" r="10" fill="#fecaca"/>
+                    
+                    
+                    <rect x="42" y="35" width="16" height="20" rx="3" fill="#fecaca"/>
+                    
+                    
+                    <ellipse cx="50" cy="20" rx="25" ry="28" fill="#fecaca"/>
+                    
+                    
+                    <path d="M25 10 Q25 -5 50 -5 Q75 -5 75 10 Q75 20 70 15 Q60 0 50 0 Q40 0 30 15 Q25 20 25 10" fill="#1c1917"/>
+                    
+                    
+                    <ellipse cx="42" cy="18" rx="3" ry="2" fill="#1c1917"/>
+                    <ellipse cx="58" cy="18" rx="3" ry="2" fill="#1c1917"/>
+                    <path d="M45 30 Q50 35 55 30" stroke="#dc2626" stroke-width="2" fill="none" stroke-linecap="round"/>
+                    
+                    
+                    <g stroke="#1c1917" stroke-width="1.5" fill="none">
+                      <circle cx="42" cy="18" r="6"/>
+                      <circle cx="58" cy="18" r="6"/>
+                      <line x1="48" y1="18" x2="52" y2="18"/>
+                    </g>
+                  </g>
+                  
+                  
+                  <g transform="translate(365, 230)">
+                    <rect x="0" y="0" width="50" height="35" rx="4" fill="#1c1917"/>
+                    <rect x="3" y="3" width="44" height="29" rx="2" fill="#3b82f6"/>
+                    
+                    <rect x="8" y="8" width="15" height="5" rx="1" fill="#fff" opacity="0.9"/>
+                    <rect x="8" y="16" width="30" height="2" rx="1" fill="#fff" opacity="0.5"/>
+                    <rect x="8" y="21" width="25" height="2" rx="1" fill="#fff" opacity="0.5"/>
+                    <rect x="8" y="26" width="20" height="2" rx="1" fill="#fff" opacity="0.5"/>
+                    
+                    <circle cx="40" cy="22" r="6" fill="#10b981"/>
+                    <path d="M37 22 L39 24 L43 19" stroke="#fff" stroke-width="1.5" fill="none"/>
+                  </g>
+                  
+                  
+                  <g transform="translate(60, 300)">
+                    
+                    <rect x="0" y="0" width="60" height="35" rx="4" fill="#d6d3d1"/>
+                    <rect x="5" y="5" width="50" height="5" fill="#a8a29e"/>
+                    
+                    <rect x="18" y="-15" width="24" height="18" rx="3" fill="#78716c"/>
+                    <rect x="20" y="-25" width="20" height="12" rx="2" fill="#57534e"/>
+                  </g>
+                  
+                  <g transform="translate(160, 310)">
+                    <rect x="0" y="0" width="60" height="35" rx="4" fill="#d6d3d1"/>
+                    <rect x="5" y="5" width="50" height="5" fill="#a8a29e"/>
+                    <rect x="18" y="-15" width="24" height="18" rx="3" fill="#78716c"/>
+                    <rect x="20" y="-25" width="20" height="12" rx="2" fill="#57534e"/>
+                  </g>
+                  
+                  <g transform="translate(260, 305)">
+                    <rect x="0" y="0" width="60" height="35" rx="4" fill="#d6d3d1"/>
+                    <rect x="5" y="5" width="50" height="5" fill="#a8a29e"/>
+                    <rect x="18" y="-15" width="24" height="18" rx="3" fill="#78716c"/>
+                    <rect x="20" y="-25" width="20" height="12" rx="2" fill="#57534e"/>
+                  </g>
+                  
+                  
+                  <g transform="translate(350, 60)">
+                    <rect x="0" y="0" width="120" height="50" rx="10" fill="#fff" stroke="#e7e5e4" stroke-width="1"/>
+                    <circle cx="20" cy="25" r="12" fill="#dcfce7"/>
+                    <path d="M14 25 L18 29 L26 21" stroke="#10b981" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                    <text x="40" y="22" font-family="sans-serif" font-size="10" font-weight="600" fill="#1c1917">Attendance</text>
+                    <text x="40" y="36" font-family="sans-serif" font-size="8" fill="#78716c">98% today</text>
+                  </g>
+                  
+                  
+                  <g transform="translate(380, 140)">
+                    <rect x="0" y="0" width="100" height="45" rx="8" fill="#fff" stroke="#e7e5e4" stroke-width="1"/>
+                    <rect x="12" y="10" width="20" height="20" rx="4" fill="#fef3c7"/>
+                    <text x="40" y="22" font-family="sans-serif" font-size="9" font-weight="600" fill="#1c1917">Reports</text>
+                    <text x="40" y="35" font-family="sans-serif" font-size="8" fill="#78716c">View analytics</text>
+                  </g>
+                  
+                  
+                  <circle cx="30" cy="30" r="20" fill="#ea580c" opacity="0.1"/>
+                  <circle cx="480" cy="350" r="25" fill="#10b981" opacity="0.1"/>
+                  <circle cx="470" cy="80" r="15" fill="#f97316" opacity="0.1"/>
+                  
+                  
+                  <g transform="translate(400, 50)">
+                    <circle cx="0" cy="0" r="18" fill="#fff" stroke="#d6d3d1" stroke-width="2"/>
+                    <circle cx="0" cy="0" r="2" fill="#1c1917"/>
+                    <line x1="0" y1="0" x2="0" y2="-10" stroke="#1c1917" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="0" y1="0" x2="8" y2="4" stroke="#1c1917" stroke-width="1.5" stroke-linecap="round"/>
+                  </g>
+                  
+                  
+                  <g transform="translate(80, 280)">
+                    <rect x="0" y="0" width="25" height="18" rx="2" fill="#7c3aed"/>
+                    <rect x="2" y="2" width="21" height="14" rx="1" fill="#8b5cf6"/>
+                    <rect x="26" y="3" width="20" height="15" rx="2" fill="#059669"/>
+                    <rect x="28" y="5" width="16" height="11" rx="1" fill="#10b981"/>
+                  </g>
+                  
+                  
+                  <g transform="translate(450, 280)">
+                    <rect x="0" y="20" width="25" height="35" rx="3" fill="#b45309"/>
+                    <ellipse cx="12" cy="20" rx="12" ry="15" fill="#22c55e"/>
+                    <ellipse cx="12" cy="10" rx="8" ry="10" fill="#16a34a"/>
+                  </g>
+                </svg>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- Chat Preview -->
-<section class="py-20 px-6 text-center bg-white">
-  <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 m-0">Try the Assistant</h2>
-  <p class="mt-2.5 mb-7 text-slate-500 max-w-xl mx-auto">Static demo preview of the response style.</p>
-  <div class="max-w-xl mx-auto text-left p-5 rounded-2xl border border-slate-200 shadow-lg bg-gradient-to-b from-white to-slate-50">
-    <div class="p-3.5 border border-slate-200 rounded-xl mb-3">
-      <span class="inline-block mb-2 text-xs font-bold uppercase tracking-wider text-blue-600">User</span>
-      <p class="m-0 text-slate-800 text-sm">How many students were absent today?</p>
+  
+  <section id="features" class="features-section">
+    <div class="section-container">
+      <div class="section-header">
+        <span class="section-badge">Features</span>
+        <h2 class="section-title">Everything You Need</h2>
+        <p class="section-description">Powerful tools to manage your school efficiently</p>
+      </div>
+      
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon orange">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>
+          </div>
+          <h3 class="feature-title">Smart Attendance</h3>
+          <p class="feature-description">Track and manage attendance with AI-powered insights and automated reports.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon amber">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456Z" />
+            </svg>
+          </div>
+          <h3 class="feature-title">AI Assistant</h3>
+          <p class="feature-description">Get instant answers from your documents and policies through natural chat.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon emerald">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
+            </svg>
+          </div>
+          <h3 class="feature-title">Class Management</h3>
+          <p class="feature-description">Organize classes, enrollments, and resources in one unified dashboard.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon cyan">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15a4.5 4.5 0 0 0 4.5 4.5H18a3.75 3.75 0 0 0 1.332-7.257 3 3 0 0 0-3.758-3.848 5.25 5.25 0 0 0-10.233 2.33A4.502 4.502 0 0 0 2.25 15Z" />
+            </svg>
+          </div>
+          <h3 class="feature-title">Resource Library</h3>
+          <p class="feature-description">Store and share documents, policies, and materials securely.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon blue">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
+            </svg>
+          </div>
+          <h3 class="feature-title">User Management</h3>
+          <p class="feature-description">Manage teachers, students, and parents with role-based access.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon violet">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z" />
+            </svg>
+          </div>
+          <h3 class="feature-title">Analytics</h3>
+          <p class="feature-description">Track performance with detailed reports and analytics dashboards.</p>
+        </div>
+      </div>
     </div>
-    <div class="p-3.5 border border-blue-200 rounded-xl bg-blue-50">
-      <span class="inline-block mb-2 text-xs font-bold uppercase tracking-wider text-blue-600">Assistant</span>
-      <p class="m-0 text-slate-800 text-sm">3 students were absent today in Class A.</p>
-      <span class="inline-block mt-2 px-2.5 py-1 rounded-full text-xs font-medium text-blue-700 bg-blue-100">Citation: attendance_report_2026.pdf, page 2</span>
+  </section>
+
+  
+  <section id="how-it-works" class="steps-section">
+    <div class="section-container">
+      <div class="section-header">
+        <span class="section-badge">How It Works</span>
+        <h2 class="section-title">Get Started in Minutes</h2>
+        <p class="section-description">Three simple steps to transform your school management</p>
+      </div>
+      
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-number">1</div>
+          <div class="step-icon orange">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.59 14.37a6 6 0 0 1-5.84 0m5.84 0a6 6 0 1 0-5.84 0m5.84 0A14.923 14.923 0 0 1 18.75 19.5m-9-5.13A14.923 14.923 0 0 0 5.25 19.5"/>
+            </svg>
+          </div>
+          <h3 class="step-title">Create Account</h3>
+          <p class="step-description">Sign up for free and set up your school profile in minutes.</p>
+        </div>
+        
+        <div class="step-card">
+          <div class="step-number">2</div>
+          <div class="step-icon amber">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            </svg>
+          </div>
+          <h3 class="step-title">Add Users</h3>
+          <p class="step-description">Invite teachers, students, and parents to join your platform.</p>
+        </div>
+        
+        <div class="step-card">
+          <div class="step-number">3</div>
+          <div class="step-icon emerald">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456Z" />
+            </svg>
+          </div>
+          <h3 class="step-title">Go Live</h3>
+          <p class="step-description">Start using AI features and streamline your operations.</p>
+        </div>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- Features -->
-<section id="features" class="py-20 px-6 text-center">
-  <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 m-0">Key Features</h2>
-  <p class="mt-2.5 mb-7 text-slate-500 max-w-xl mx-auto">Designed for academic clarity and day-to-day operations.</p>
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-5xl mx-auto">
-    @for (feature of features; track feature.title) {
-      <app-feature-card [icon]="feature.icon" [title]="feature.title" [description]="feature.description" />
-    }
-  </div>
-</section>
+  
+  <section id="testimonials" class="testimonials-section">
+    <div class="section-container">
+      <div class="section-header">
+        <span class="section-badge">Testimonials</span>
+        <h2 class="section-title">Loved by Educators</h2>
+        <p class="section-description">See what schools are saying about SchoolAI</p>
+      </div>
+      
+      <div class="testimonials-grid">
+        <div class="testimonial-card">
+          <div class="testimonial-rating">
+            @for (star of [1,2,3,4,5]; track star) {
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="#f59e0b" viewBox="0 0 24 24">
+                <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.435c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.89 1.391l-5.681-2.796-5.681 2.796c-.926.642-2.162-.255-1.89-1.391l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.435 2.082-5.005Z" clip-rule="evenodd" />
+              </svg>
+            }
+          </div>
+          <p class="testimonial-text">"SchoolAI has transformed how we manage attendance. The AI assistant saves us hours every week!"</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">JD</div>
+            <div class="author-info">
+              <span class="author-name">John Davis</span>
+              <span class="author-role">Principal, Lincoln High</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="testimonial-card">
+          <div class="testimonial-rating">
+            @for (star of [1,2,3,4,5]; track star) {
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="#f59e0b" viewBox="0 0 24 24">
+                <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.435c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.89 1.391l-5.681-2.796-5.681 2.796c-.926.642-2.162-.255-1.89-1.391l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.435 2.082-5.005Z" clip-rule="evenodd" />
+              </svg>
+            }
+          </div>
+          <p class="testimonial-text">"The document search feature is incredible. I can find any policy in seconds!"</p>
+          <div class="testimonial-author">
+            <div class="author-avatar sm">SM</div>
+            <div class="author-info">
+              <span class="author-name">Sarah Mitchell</span>
+              <span class="author-role">Dean, Riverside Academy</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="testimonial-card">
+          <div class="testimonial-rating">
+            @for (star of [1,2,3,4,5]; track star) {
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="#f59e0b" viewBox="0 0 24 24">
+                <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.435c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.89 1.391l-5.681-2.796-5.681 2.796c-.926.642-2.162-.255-1.89-1.391l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.435 2.082-5.005Z" clip-rule="evenodd" />
+              </svg>
+            }
+          </div>
+          <p class="testimonial-text">"Best investment we've made for our school. Highly recommended!"</p>
+          <div class="testimonial-author">
+            <div class="author-avatar mk">MK</div>
+            <div class="author-info">
+              <span class="author-name">Mike Kelly</span>
+              <span class="author-role">IT Director, Westfield School</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<!-- How It Works -->
-<section id="how-it-works" class="py-20 px-6 text-center bg-slate-50">
-  <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 m-0">How It Works</h2>
-  <p class="mt-2.5 mb-7 text-slate-500 max-w-xl mx-auto">Three simple steps to run the full workflow.</p>
-  <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-5xl mx-auto">
-    @for (step of steps; track step.title; let i = $index) {
-      <app-step-card [stepNumber]="i + 1" [icon]="step.icon" [title]="step.title" [description]="step.description" />
-    }
-  </div>
-</section>
+  
+  <section id="pricing" class="pricing-section">
+    <div class="section-container">
+      <div class="section-header">
+        <span class="section-badge">Pricing</span>
+        <h2 class="section-title">Simple, Transparent Pricing</h2>
+        <p class="section-description">Choose the plan that fits your school</p>
+      </div>
+      
+      <div class="pricing-grid">
+        <div class="pricing-card">
+          <div class="pricing-header">
+            <h3 class="pricing-title">Starter</h3>
+            <div class="pricing-price">
+              <span class="price-amount">Free</span>
+            </div>
+            <p class="pricing-desc">Perfect for small schools</p>
+          </div>
+          <ul class="pricing-features">
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+              Up to 100 students
+            </li>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+              Basic attendance
+            </li>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+              5 teachers
+            </li>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+              Email support
+            </li>
+          </ul>
+          <a routerLink="/register" class="pricing-btn">Get Started</a>
+        </div>
+        
+        <div class="pricing-card featured">
+          <div class="featured-badge">Most Popular</div>
+          <div class="pricing-header">
+            <h3 class="pricing-title">Professional</h3>
+            <div class="pricing-price">
+              <span class="price-currency">$</span>
+              <span class="price-amount">49</span>
+              <span class="price-period">/month</span>
+            </div>
+            <p class="pricing-desc">For growing schools</p>
+          </div>
+          <ul class="pricing-features">
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+              Unlimited students
+            </li>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+              AI Assistant
+            </li>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+              Unlimited teachers
+            </li>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+              Priority support
+            </li>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+              Analytics dashboard
+            </li>
+          </ul>
+          <a routerLink="/register" class="pricing-btn featured">Start Free Trial</a>
+        </div>
+        
+        <div class="pricing-card">
+          <div class="pricing-header">
+            <h3 class="pricing-title">Enterprise</h3>
+            <div class="pricing-price">
+              <span class="price-amount">Custom</span>
+            </div>
+            <p class="pricing-desc">For large institutions</p>
+          </div>
+          <ul class="pricing-features">
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+              Everything in Pro
+            </li>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+              Custom integrations
+            </li>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+              Dedicated support
+            </li>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+              SLA guarantee
+            </li>
+          </ul>
+          <a routerLink="/contact" class="pricing-btn">Contact Us</a>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<!-- Footer -->
-<footer class="flex flex-wrap items-center justify-between gap-3 px-6 py-5 border-t border-slate-200 bg-white">
-  <div class="inline-flex items-center gap-2 font-bold text-slate-900">
-    <span class="inline-flex items-center justify-center w-6 h-6 rounded bg-blue-600 text-white">
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.627 48.627 0 0 1 12 20.904a48.627 48.627 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.606 50.606 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0 0v-3.675A55.378 55.378 0 0 1 12 8.443m-7.007 11.55A5.981 5.981 0 0 0 6.75 15.75v-1.5" />
-      </svg>
-    </span>
-    SchoolAI
-  </div>
-  <div class="flex gap-1">
-    <button class="px-3 py-1.5 text-sm text-slate-500 bg-transparent border-none cursor-pointer hover:text-slate-800">Privacy</button>
-    <button class="px-3 py-1.5 text-sm text-slate-500 bg-transparent border-none cursor-pointer hover:text-slate-800">Contact</button>
-  </div>
-  <p class="m-0 text-slate-400 text-sm">SchoolAI platform experience.</p>
-</footer>
+  
+  <section class="cta-section">
+    <div class="cta-container">
+      <div class="cta-content">
+        <h2 class="cta-title">Ready to Transform Your School?</h2>
+        <p class="cta-description">Join hundreds of schools already using SchoolAI</p>
+        <div class="cta-buttons">
+          <a routerLink="/register" class="btn-cta-large">Get Started Free</a>
+          <a routerLink="/login" class="btn-cta-outline">Schedule Demo</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-main">
+        <div class="footer-brand-col">
+          <a routerLink="/" class="footer-logo">
+            <div class="brand-icon-sm">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.627 48.627 0 0 1 12 20.904a48.627 48.627 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.606 50.606 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0 0v-3.675A55.378 55.378 0 0 1 12 8.443m-7.007 11.55A5.981 5.981 0 0 0 6.75 15.75v-1.5" />
+              </svg>
+            </div>
+            <span>SchoolAI</span>
+          </a>
+          <p class="footer-desc">Transform your school management with AI-powered automation. Save time, reduce errors, and focus on what matters — education.</p>
+          <div class="footer-social">
+            <a href="#" class="social-link">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0 0 22 5.92a8.19 8.19 0 0 1-2.357.646 4.118 4.118 0 0 0-7.012 3.749 11.153 11.153 0 0 1-8.215-4.175 4.076 4.076 0 0 0-.566 2.17c0 1.355.346 2.67.979 3.835a4.063 4.063 0 0 1-1.854-.514v.05a4.076 4.076 0 0 0 3.28 3.995 4.112 4.112 0 0 1-1.853.07 4.106 4.106 0 0 0 3.836 2.812 8.2 8.2 0 0 1-4.946 1.587 8.206 8.206 0 0 1-1.498-.103c4.398 2.724 9.805 2.724 14.193 0"/>
+              </svg>
+            </a>
+            <a href="#" class="social-link">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C6.477 2 2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12c0-5.523-4.477-10-10-10z"/>
+              </svg>
+            </a>
+            <a href="#" class="social-link">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10c5.51 0 10-4.48 10-10S17.51 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+        
+        <div class="footer-links-col">
+          <div class="footer-link-group">
+            <h4>Product</h4>
+            <a href="#features">Features</a>
+            <a href="#pricing">Pricing</a>
+            <a href="#">Documentation</a>
+            <a href="#">API</a>
+          </div>
+          
+          <div class="footer-link-group">
+            <h4>Company</h4>
+            <a href="#">About</a>
+            <a href="#">Blog</a>
+            <a href="#">Careers</a>
+            <a href="#">Contact</a>
+          </div>
+          
+          <div class="footer-link-group">
+            <h4>Legal</h4>
+            <a href="#">Privacy</a>
+            <a href="#">Terms</a>
+            <a href="#">Security</a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="footer-bottom">
+        <p>© 2026 SchoolAI. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+</div>

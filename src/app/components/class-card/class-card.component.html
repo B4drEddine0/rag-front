@@ -3,8 +3,11 @@
 
   <div class="class-card__head">
     <div class="class-card__icon">
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" class="w-11 h-11">
+        <rect x="8" y="12" width="48" height="40" rx="6" fill="currentColor" opacity="0.15"/>
+        <path d="M16 20h32M16 28h24M16 36h28" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="48" cy="44" r="8" fill="currentColor" opacity="0.2"/>
+        <path d="M45 44l2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
       </svg>
     </div>
     <div class="min-w-0">
@@ -29,12 +32,14 @@
   </div>
 
   <div class="class-card__footer">
-    <a [routerLink]="['/classes', classId]" class="class-card__cta no-underline">
-      View Details
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-      </svg>
-    </a>
+    @if (showDetailsAction) {
+      <a [routerLink]="['/classes', classId]" class="class-card__cta no-underline">
+        View Details
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+        </svg>
+      </a>
+    }
     @if (showAdminActions) {
       <div class="class-card__admin-actions">
         <button type="button" class="class-card__btn class-card__btn--edit" (click)="onEdit($event)">Edit</button>

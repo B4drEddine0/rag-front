@@ -29,6 +29,7 @@ export class AttendanceComponent implements OnInit {
   private readonly viewState = inject(ViewStateService);
 
   readonly isAdmin = computed(() => this.authService.role() === 'ADMIN');
+  readonly isStudent = computed(() => this.authService.role() === 'STUDENT');
 
   selectedTeacherId = 0;
 
