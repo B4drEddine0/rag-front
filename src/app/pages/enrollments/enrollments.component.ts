@@ -27,9 +27,17 @@ export class EnrollmentsComponent implements OnInit {
   selectedClassId = 0;
   selectedStudentId = 0;
 
-  readonly enrollmentState = computed(() => this.viewState.enrollmentsByClass()[this.selectedClassId]);
-  readonly enrollments = computed(() => this.enrollmentState()?.enrollments ?? []);
-  readonly loadingEnrollments = computed(() => this.enrollmentState()?.loading ?? false);
+  get enrollmentState() {
+    return this.viewState.enrollmentsByClass()[this.selectedClassId];
+  }
+
+  get enrollments() {
+    return this.enrollmentState?.enrollments ?? [];
+  }
+
+  get loadingEnrollments() {
+    return this.enrollmentState?.loading ?? false;
+  }
 
   ngOnInit(): void {
     this.viewState.loadEnrollmentsSetup();

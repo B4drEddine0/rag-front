@@ -2,6 +2,7 @@ import { Injectable, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
+import { timeout } from 'rxjs/operators';
 import { AuthResponse, LoginRequest, RegisterRequest } from '../../shared/models/auth.model';
 
 const AUTH_KEY = 'auth_user';
@@ -25,12 +26,14 @@ export class AuthService {
 
   login(req: LoginRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${BASE}/login`, req).pipe(
+      timeout(10000),
       tap(res => this.persist(res))
     );
   }
 
   register(req: RegisterRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${BASE}/register`, req).pipe(
+      timeout(10000),
       tap(res => this.persist(res))
     );
   }

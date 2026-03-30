@@ -21,9 +21,9 @@
           class="form-input" />
         <input [(ngModel)]="newYear" type="number" placeholder="Year"
           class="form-input year-input" />
-        <button (click)="createClass()" [disabled]="saving || !newClassName.trim()"
+        <button (click)="createClass()" [disabled]="saving() || !newClassName.trim()"
           class="btn-primary">
-          {{ saving ? 'Creating…' : 'Create' }}
+          {{ saving() ? 'Creating…' : 'Create' }}
         </button>
         <button (click)="showAddForm = false"
           class="btn-secondary">
@@ -41,15 +41,18 @@
           class="form-input" />
         <input [(ngModel)]="editYear" type="number" placeholder="Year"
           class="form-input year-input" />
-        <button (click)="saveEditClass()" [disabled]="saving || !editClassName.trim()"
+        <button (click)="saveEditClass()" [disabled]="saving() || !editClassName.trim()"
           class="btn-primary">
-          {{ saving ? 'Saving…' : 'Save Changes' }}
+          {{ saving() ? 'Saving…' : 'Save Changes' }}
         </button>
         <button (click)="cancelEditClass()"
           class="btn-secondary">
           Cancel
         </button>
       </div>
+      @if (saveError()) {
+        <p class="error-message">{{ saveError() }}</p>
+      }
     </div>
   }
 
@@ -66,7 +69,7 @@
           [showDetailsAction]="!isStudent()"
           [showAdminActions]="isAdmin()"
           (editClicked)="startEditClass(cls)"
-          (deleteClicked)="deleteClass(cls)" />
+          (deleteClicked)="requestDeleteClass(cls)" />
       }
     </div>
   } @else if (loading) {
@@ -95,4 +98,13 @@
       }
     </div>
   }
+
+  <app-confirm-modal
+    [open]="showDeleteConfirm"
+    title="Delete class"
+    [message]="pendingDeleteClass ? ('Delete class ' + pendingDeleteClass.name + '?') : 'Delete this class?'"
+    confirmText="Delete"
+    [destructive]="true"
+    (cancelled)="cancelDeleteClass()"
+    (confirmed)="confirmDeleteClass()"></app-confirm-modal>
 </div>

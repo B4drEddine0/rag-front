@@ -7,13 +7,19 @@ import { ToastService } from '../../shared/services/toast.service';
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const auth = inject(AuthService);
   const toast = inject(ToastService);
+  const isAuthRequest = req.url.includes('/api/auth/login') || req.url.includes('/api/auth/register');
 
   return next(req).pipe(
     catchError(err => {
       const status: number = err.status;
       if (status === 401) {
-        auth.logout();
-        toast.error('Session expired. Please log in again.');
+        if (isAuthRequest) {
+          const msg = err?.error?.message;
+          toast.error(typeof msg === 'string' && msg.trim() ? msg : 'Invalid email or password.');
+        } else {
+          auth.logout();
+          toast.error('Session expired. Please log in again.');
+        }
       } else if (status === 403) {
         toast.error('You do not have permission to perform this action.');
       } else if (status === 404) {

@@ -23,7 +23,9 @@
     </div>
   </div>
 
-  <p class="resource-card__description">{{ description }}</p>
+  @if (description) {
+    <p class="resource-card__description">{{ description }}</p>
+  }
 
   <div class="resource-card__meta">
     <span>

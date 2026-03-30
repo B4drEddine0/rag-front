@@ -31,9 +31,9 @@
   <div class="error-state">{{ setupError() }}</div>
 } @else if (!selectedClassId) {
   <div class="empty-state">Select a class to view enrollments.</div>
-} @else if (loadingEnrollments()) {
+} @else if (loadingEnrollments) {
   <div class="loading-state">Loading enrollments...</div>
-} @else if (enrollments().length === 0) {
+} @else if (enrollments.length === 0) {
   <div class="empty-state">No enrollments for {{ className(selectedClassId) }}.</div>
 } @else {
   <div class="table-card">
@@ -43,18 +43,18 @@
           <th>Student</th>
           <th>Status</th>
           <th>Enrolled At</th>
-          <th class="text-right">Action</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody>
-        @for (e of enrollments(); track e.id) {
+        @for (e of enrollments; track e.id) {
           <tr>
             <td>{{ studentName(e.studentId) }}</td>
             <td>
               <span class="status-badge" [class.active]="e.status === 'ACTIVE'" [class.ended]="e.status !== 'ACTIVE'">{{ e.status }}</span>
             </td>
             <td>{{ e.enrolledAt | date:'yyyy-MM-dd HH:mm' }}</td>
-            <td class="text-right">
+            <td>
               @if (e.status === 'ACTIVE') {
                 <button (click)="endEnrollment(e.id)" class="btn-action">End</button>
               } @else {

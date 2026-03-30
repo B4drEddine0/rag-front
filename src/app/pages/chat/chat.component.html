@@ -80,6 +80,7 @@
   <div class="chat-input-row flex items-center gap-3 pt-3 border-t border-slate-200">
     <select
       [(ngModel)]="selectedMode"
+      (ngModelChange)="onModeChange($event)"
       class="px-3 py-3 rounded-2xl border border-slate-200 bg-white text-sm text-slate-700 outline-none focus:border-orange-400 focus:ring-4 focus:ring-orange-100">
       @for (m of availableModes; track m.value) {
         <option [value]="m.value">{{ m.label }}</option>

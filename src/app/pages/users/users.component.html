@@ -17,7 +17,7 @@
         class="form-input" />
       <input [(ngModel)]="form.email" placeholder="Email"
         class="form-input" />
-      <input [(ngModel)]="form.password" type="password" placeholder="Password"
+      <input [(ngModel)]="form.password" type="password" [placeholder]="editingId ? 'Password (optional)' : 'Password'"
         class="form-input" />
       <select [(ngModel)]="form.role" class="form-input">
         @for (role of roles; track role) {
@@ -28,10 +28,13 @@
 
     <div class="form-actions">
       <button (click)="cancelForm()" class="btn-secondary">Cancel</button>
-      <button (click)="save()" [disabled]="saving" class="btn-primary">
-        {{ saving ? 'Saving...' : 'Save' }}
+      <button (click)="save()" [disabled]="saving()" class="btn-primary">
+        {{ saving() ? 'Saving...' : 'Save' }}
       </button>
     </div>
+    @if (saveError()) {
+      <p class="error-state">{{ saveError() }}</p>
+    }
   </div>
 }
 
@@ -68,7 +71,7 @@
             </td>
             <td class="text-right">
               <button (click)="startEdit(u)" class="btn-edit">Edit</button>
-              <button (click)="deleteUser(u.id)" class="btn-delete">Delete</button>
+              <button (click)="requestDeleteUser(u)" class="btn-delete">Delete</button>
             </td>
           </tr>
         }
@@ -76,3 +79,12 @@
     </table>
   </div>
 }
+
+<app-confirm-modal
+  [open]="showDeleteConfirm"
+  title="Delete user"
+  [message]="pendingDeleteUser ? ('Delete user ' + pendingDeleteUser.fullName + '?') : 'Delete this user?'"
+  confirmText="Delete"
+  [destructive]="true"
+  (cancelled)="cancelDeleteUser()"
+  (confirmed)="confirmDeleteUser()"></app-confirm-modal>

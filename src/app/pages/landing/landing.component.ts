@@ -1,12 +1,10 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { FeatureCardComponent } from '../../components/feature-card/feature-card.component';
-import { StepCardComponent } from '../../components/step-card/step-card.component';
 
 @Component({
   selector: 'app-landing',
   standalone: true,
-  imports: [RouterLink, FeatureCardComponent, StepCardComponent],
+  imports: [RouterLink],
   templateUrl: './landing.component.html',
   styleUrl: './landing.component.css'
 })

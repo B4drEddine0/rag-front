@@ -35,9 +35,13 @@
                  class="form-input" />
         </div>
         <div class="form-group">
-          <label class="form-label">Class room ID (optional)</label>
-          <input [(ngModel)]="newClassRoomId" type="number" min="1" placeholder="e.g. 1"
-                 class="form-input" />
+          <label class="form-label">Class (optional)</label>
+          <select [(ngModel)]="newClassRoomId" class="form-input">
+            <option [ngValue]="null">General resource (no class)</option>
+            @for (cls of classOptions; track cls.id) {
+              <option [ngValue]="+cls.id">{{ cls.name }}</option>
+            }
+          </select>
         </div>
       </div>
       <div class="form-group">
@@ -50,14 +54,17 @@
         <label for="official" class="checkbox-label">Official resource</label>
       </div>
       <div class="form-actions">
-        <button (click)="submitUpload()" [disabled]="uploading || !newTitle.trim() || !selectedFile"
+        <button (click)="submitUpload()" [disabled]="uploadState.loading() || !newTitle.trim() || !selectedFile"
                 class="btn-primary">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" />
           </svg>
-          {{ uploading ? 'Uploading...' : 'Upload' }}
+          {{ uploadState.loading() ? 'Uploading...' : 'Upload' }}
         </button>
       </div>
+      @if (uploadState.error()) {
+        <p class="error-message">{{ uploadState.error() }}</p>
+      }
     </div>
   }
 
@@ -72,10 +79,19 @@
           [date]="res.date"
           [showDelete]="isAdmin"
           (viewClicked)="viewFile(res)"
-          (deleteClicked)="deleteResource(res.id)" />
+          (deleteClicked)="requestDeleteResource(res)" />
       }
     </div>
   }
+
+  <app-confirm-modal
+    [open]="showDeleteConfirm"
+    title="Delete resource"
+    [message]="pendingDeleteResource ? ('Delete resource ' + pendingDeleteResource.title + '?') : 'Delete this resource?'"
+    confirmText="Delete"
+    [destructive]="true"
+    (cancelled)="cancelDeleteResource()"
+    (confirmed)="confirmDeleteResource()"></app-confirm-modal>
 
   @if (previewOpen) {
     <div class="modal-overlay">

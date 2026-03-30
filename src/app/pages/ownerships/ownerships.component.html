@@ -18,11 +18,14 @@
       }
     </select>
 
-    <button (click)="createOwnership()" [disabled]="!selectedClassId || !selectedTeacherId"
+    <button (click)="createOwnership()" [disabled]="!selectedClassId || !selectedTeacherId || assigning()"
       class="btn-primary">
-      Assign Ownership
+      {{ assigning() ? 'Assigning...' : 'Assign Ownership' }}
     </button>
   </div>
+  @if (assignError()) {
+    <div class="error-state">{{ assignError() }}</div>
+  }
 </div>
 
 @if (setupLoading()) {
@@ -31,9 +34,9 @@
   <div class="error-state">{{ setupError() }}</div>
 } @else if (!selectedClassId) {
   <div class="empty-state">Select a class to view ownership records.</div>
-} @else if (loadingOwnerships()) {
+} @else if (loadingOwnerships) {
   <div class="loading-state">Loading ownership records...</div>
-} @else if (ownerships().length === 0) {
+} @else if (ownerships.length === 0) {
   <div class="empty-state">No ownership records for {{ className(selectedClassId) }}.</div>
 } @else {
   <div class="table-card">
@@ -43,18 +46,18 @@
           <th>Teacher</th>
           <th>Status</th>
           <th>Assigned At</th>
-          <th class="text-right">Action</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody>
-        @for (o of ownerships(); track o.id) {
+        @for (o of ownerships; track o.id) {
           <tr>
             <td>{{ teacherName(o.teacherId) }}</td>
             <td>
               <span class="status-badge" [class.active]="isActive(o.status)" [class.ended]="!isActive(o.status)">{{ o.status }}</span>
             </td>
             <td>{{ o.assignedAt | date:'yyyy-MM-dd HH:mm' }}</td>
-            <td class="text-right">
+            <td>
               @if (isActive(o.status)) {
                 <button (click)="endOwnership(o.id)" class="btn-action">End</button>
               } @else {

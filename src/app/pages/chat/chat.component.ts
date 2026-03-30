@@ -14,6 +14,8 @@ import { ChatBubbleComponent } from '../../components/chat-bubble/chat-bubble.co
   styleUrl: './chat.component.css'
 })
 export class ChatComponent implements OnInit {
+  private static readonly CHAT_MODE_STORAGE_PREFIX = 'chat_mode_user_';
+
   private readonly viewState = inject(ViewStateService);
   private readonly authService = inject(AuthService);
 
@@ -73,8 +75,9 @@ export class ChatComponent implements OnInit {
 
   ngOnInit(): void {
     this.viewState.hydrateChatForCurrentUser();
+    this.hydrateModeForCurrentUser();
     if (this.isStudent && this.selectedMode === 'STATS') {
-      this.selectedMode = 'DOCUMENTS';
+      this.setMode('DOCUMENTS');
     }
   }
 
@@ -82,10 +85,15 @@ export class ChatComponent implements OnInit {
     const text = this.userInput.trim();
     if (!text || this.loading) return;
     if (this.isStudent && this.selectedMode === 'STATS') {
-      this.selectedMode = 'DOCUMENTS';
+      this.setMode('DOCUMENTS');
     }
     this.userInput = '';
     this.viewState.sendChatMessage(text, this.selectedMode);
+  }
+
+  onModeChange(mode: ChatMode): void {
+    const safeMode = this.isStudent && mode === 'STATS' ? 'DOCUMENTS' : mode;
+    this.setMode(safeMode);
   }
 
   onKeyDown(event: KeyboardEvent): void {
@@ -96,7 +104,7 @@ export class ChatComponent implements OnInit {
   }
 
   quickAsk(mode: ChatMode, question: string): void {
-    this.selectedMode = this.isStudent && mode === 'STATS' ? 'DOCUMENTS' : mode;
+    this.setMode(this.isStudent && mode === 'STATS' ? 'DOCUMENTS' : mode);
     this.userInput = question;
     this.send();
   }
@@ -118,5 +126,40 @@ export class ChatComponent implements OnInit {
   private scrollToBottom(): void {
     const el = this.chatContainer?.nativeElement;
     if (el) el.scrollTop = el.scrollHeight;
+  }
+
+  private setMode(mode: ChatMode): void {
+    this.selectedMode = mode;
+    this.persistModeForCurrentUser(mode);
+  }
+
+  private modeStorageKey(): string | null {
+    const userId = this.authService.userId();
+    if (!userId) return null;
+    return `${ChatComponent.CHAT_MODE_STORAGE_PREFIX}${userId}`;
+  }
+
+  private hydrateModeForCurrentUser(): void {
+    const key = this.modeStorageKey();
+    if (!key) return;
+
+    try {
+      const rawMode = localStorage.getItem(key);
+      if (!rawMode) return;
+      if (this.modes.some(m => m.value === rawMode)) {
+        this.selectedMode = rawMode as ChatMode;
+      }
+    } catch {
+    }
+  }
+
+  private persistModeForCurrentUser(mode: ChatMode): void {
+    const key = this.modeStorageKey();
+    if (!key) return;
+
+    try {
+      localStorage.setItem(key, mode);
+    } catch {
+    }
   }
 }

@@ -1,50 +1,62 @@
-import { Component, inject } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
-import { AuthService } from '../../core/services/auth.service';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { RouterLink } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { ApiRole } from '../../shared/models/auth.model';
-import { ToastService } from '../../shared/services/toast.service';
+import { AuthUiActions } from '../../store/auth-ui/auth-ui.actions';
+import { selectRegistered, selectRegisterError, selectRegisterLoading } from '../../store/auth-ui/auth-ui.reducer';
+
+const STRICT_EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [FormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnInit, OnDestroy {
   readonly roles: ApiRole[] = ['ADMIN', 'TEACHER', 'STUDENT'];
-  fullName = '';
-  email = '';
-  password = '';
-  selectedRole: ApiRole = 'STUDENT';
   hidePassword = true;
-  registered = false;
-  loading = false;
 
-  private readonly router = inject(Router);
-  private readonly authService = inject(AuthService);
-  private readonly toast = inject(ToastService);
+  readonly store = inject(Store);
+  readonly loading = this.store.selectSignal(selectRegisterLoading);
+  readonly serverError = this.store.selectSignal(selectRegisterError);
+  readonly registered = this.store.selectSignal(selectRegistered);
+
+  readonly form = inject(FormBuilder).nonNullable.group({
+    fullName: ['', [Validators.required]],
+    email: ['', [Validators.required, Validators.email, Validators.pattern(STRICT_EMAIL_PATTERN)]],
+    password: ['', [Validators.required, Validators.minLength(6)]],
+    selectedRole: ['STUDENT' as ApiRole, [Validators.required]]
+  });
+
+  ngOnInit(): void {
+    this.store.dispatch(AuthUiActions.resetRegisterSuccess());
+    this.store.dispatch(AuthUiActions.clearErrors());
+  }
+
+  ngOnDestroy(): void {
+    this.store.dispatch(AuthUiActions.clearErrors());
+  }
 
   submit(): void {
-    if (!this.fullName || !this.email || !this.password) return;
-    this.loading = true;
-    this.authService.register({
-      fullName: this.fullName,
-      email: this.email,
-      password: this.password,
-      role: this.selectedRole
-    }).subscribe({
-      next: () => {
-        this.loading = false;
-        this.registered = true;
-        this.toast.success('Registration successful.');
-        setTimeout(() => this.router.navigate(['/login']), 1500);
-      },
-      error: () => {
-        this.loading = false;
-        this.toast.error('Registration failed. Please try again.');
-      }
-    });
+    if (this.form.invalid || this.loading()) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    const { fullName, email, password, selectedRole } = this.form.getRawValue();
+    this.store.dispatch(AuthUiActions.registerSubmitted({
+      fullName,
+      email,
+      password,
+      role: selectedRole
+    }));
+  }
+
+  controlTouchedAndInvalid(name: 'fullName' | 'email' | 'password' | 'selectedRole'): boolean {
+    const control = this.form.controls[name];
+    return control.touched && control.invalid;
   }
 }

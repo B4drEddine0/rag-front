@@ -132,6 +132,26 @@
   border-color: #d6d3d1;
 }
 
+.form-input.invalid-input,
+.form-select.invalid-input {
+  border-color: #dc2626;
+  background: #fff7f7;
+}
+
+.field-error {
+  margin: 0.15rem 0 0;
+  color: #dc2626;
+  font-size: 0.75rem;
+  line-height: 1.35;
+}
+
+.form-error {
+  margin: 0.4rem 0 0;
+  color: #b91c1c;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
 .form-select {
   appearance: none;
   cursor: pointer;

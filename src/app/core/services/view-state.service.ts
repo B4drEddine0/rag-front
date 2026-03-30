@@ -170,8 +170,10 @@ export class ViewStateService {
         .map(item => ({
           role: item.role === 'assistant' ? 'assistant' : 'user',
           content: typeof item.content === 'string' ? item.content : '',
-          citation: typeof item.citation === 'string' ? item.citation : undefined,
           sources: Array.isArray(item.sources) ? item.sources.filter((src: unknown): src is string => typeof src === 'string') : undefined,
+          citation: (typeof item.citation === 'string' && !item.citation.trim().startsWith('"sources":'))
+            ? item.citation
+            : undefined,
           mode: item.mode,
           timestamp: item.timestamp ? new Date(item.timestamp) : new Date()
         })) as ChatMessage[];
@@ -262,11 +264,9 @@ export class ViewStateService {
       }
     }, 15000);
 
-    const canReadUsers = this.authService.role() === 'ADMIN';
-
     forkJoin({
       resources: this.resourceService.getResources().pipe(timeout(10000), catchError(() => of([]))),
-      users: (canReadUsers ? this.userService.getAll() : of([])).pipe(timeout(10000), catchError(() => of([])))
+      users: this.userService.getAll().pipe(timeout(10000), catchError(() => of([])))
     }).subscribe({
       next: ({ resources, users }) => {
         const safeUsers = Array.isArray(users) ? users : [];
@@ -276,7 +276,7 @@ export class ViewStateService {
           id: String(r?.id ?? ''),
           title: r?.title ?? 'Untitled',
           type: r?.official ? 'official' : 'non-official',
-          description: [r?.originalFilename, r?.fileType].filter(Boolean).join(' - ') || 'No file metadata',
+          description: [r?.originalFilename, r?.fileType].filter(Boolean).join(' - '),
           uploadedBy: userMap.get(r?.uploadedById) ?? 'Unknown',
           date: typeof r?.uploadedAt === 'string' ? r.uploadedAt.split('T')[0] : '-',
           classId: r?.classRoomId ? String(r.classRoomId) : undefined
@@ -304,15 +304,14 @@ export class ViewStateService {
       [classId]: { loading: true, error: '', schoolClass: undefined, students: [], resources: [] }
     }));
 
-    const canReadUsers = this.authService.role() === 'ADMIN';
-
+    // First, fetch class metadata and relationships
     forkJoin({
       classroom: this.classroomService.getById(classId).pipe(timeout(10000), catchError(() => of(null))),
       enrollments: this.enrollmentService.getByClass(classId).pipe(timeout(10000), catchError(() => of([]))),
       ownerships: this.ownershipService.getByClass(classId).pipe(timeout(10000), catchError(() => of([]))),
       students: this.studentService.getAll().pipe(timeout(10000), catchError(() => of([]))),
       teachers: this.teacherService.getAll().pipe(timeout(10000), catchError(() => of([]))),
-      users: (canReadUsers ? this.userService.getAll() : of([])).pipe(timeout(10000), catchError(() => of([]))),
+      users: this.userService.getAll().pipe(timeout(10000), catchError(() => of([]))),
       resources: this.resourceService.getByClass(classId).pipe(timeout(10000), catchError(() => of([])))
     }).subscribe({
       next: ({ classroom, enrollments, ownerships, students, teachers, users, resources }) => {
@@ -345,7 +344,7 @@ export class ViewStateService {
         const teacherNames = safeOwnerships
           .map(o => teacherMap.get(o.teacherId))
           .filter((t): t is NonNullable<typeof t> => !!t)
-          .map(t => userMap.get(t.userId)?.fullName ?? 'Teacher');
+          .map(t => this.resolvePersonName(t, userMap.get(t.userId)?.fullName, 'Teacher'));
 
         const schoolClass: SchoolClass = {
           id: String(safeClassroom.id ?? ''),
@@ -361,8 +360,8 @@ export class ViewStateService {
           .filter((s): s is NonNullable<typeof s> => !!s)
           .map(s => ({
             id: String(s.id ?? ''),
-            name: userMap.get(s.userId)?.fullName ?? 'Student',
-            email: userMap.get(s.userId)?.email ?? '-',
+            name: this.resolvePersonName(s, userMap.get(s.userId)?.fullName, 'Student'),
+            email: this.resolvePersonEmail(s, userMap.get(s.userId)?.email),
             classId: String(safeClassroom.id ?? '')
           }));
 
@@ -509,12 +508,10 @@ export class ViewStateService {
       [classId]: { loading: true, error: '', records: [] }
     }));
 
-    const canReadUsers = this.authService.role() === 'ADMIN';
-
     forkJoin({
       enrollments: this.enrollmentService.getByClass(classId).pipe(timeout(10000), catchError(() => of([]))),
       students: this.studentService.getAll().pipe(timeout(10000), catchError(() => of([]))),
-      users: (canReadUsers ? this.userService.getAll() : of([])).pipe(timeout(10000), catchError(() => of([]))),
+      users: this.userService.getAll().pipe(timeout(10000), catchError(() => of([]))),
       records: this.attendanceRecordService.getByClass(classId).pipe(timeout(10000), catchError(() => of([])))
     }).subscribe({
       next: ({ enrollments, students, users, records }) => {
@@ -589,7 +586,6 @@ export class ViewStateService {
             content: answer || 'No answer returned by server.',
             mode,
             sources,
-            citation: `"sources": ${JSON.stringify(sources)}`,
             timestamp: new Date()
           }
         ]);
@@ -756,6 +752,70 @@ export class ViewStateService {
       }),
       catchError(() => of(null))
     );
+  }
+
+  private resolvePersonName(record: unknown, fallbackName: string | undefined, label: 'Teacher' | 'Student'): string {
+    const entity = (record ?? {}) as Record<string, unknown>;
+    
+    // Check direct properties first
+    const fromRecord = [
+      entity['fullName'],
+      entity['name'],
+      entity['displayName'],
+      entity['firstName'],
+      entity['lastName'],
+      entity['teacherName'],
+      entity['studentName']
+    ].find((value): value is string => typeof value === 'string' && value.trim().length > 0);
+
+    if (fromRecord) {
+      return fromRecord.trim();
+    }
+
+    // Check nested user object
+    if (entity['user'] && typeof entity['user'] === 'object') {
+      const user = entity['user'] as Record<string, unknown>;
+      const nestedName = [
+        user['fullName'],
+        user['name'],
+        user['displayName']
+      ].find((value): value is string => typeof value === 'string' && value.trim().length > 0);
+      if (nestedName) {
+        return nestedName.trim();
+      }
+    }
+
+    if (typeof fallbackName === 'string' && fallbackName.trim()) {
+      return fallbackName.trim();
+    }
+
+    const id = typeof entity['id'] === 'number' ? entity['id'] : undefined;
+    return id ? `${label} #${id}` : label;
+  }
+
+  private resolvePersonEmail(record: unknown, fallbackEmail: string | undefined): string {
+    const entity = (record ?? {}) as Record<string, unknown>;
+    
+    // Check direct properties
+    const fromRecord = entity['email'];
+    if (typeof fromRecord === 'string' && fromRecord.trim()) {
+      return fromRecord.trim();
+    }
+
+    // Check nested user object
+    if (entity['user'] && typeof entity['user'] === 'object') {
+      const user = entity['user'] as Record<string, unknown>;
+      const nestedEmail = user['email'];
+      if (typeof nestedEmail === 'string' && nestedEmail.trim()) {
+        return nestedEmail.trim();
+      }
+    }
+
+    if (typeof fallbackEmail === 'string' && fallbackEmail.trim()) {
+      return fallbackEmail.trim();
+    }
+
+    return '-';
   }
 
   loadUsers(force = false): void {

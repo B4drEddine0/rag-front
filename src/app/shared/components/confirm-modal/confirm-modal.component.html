@@ -1,0 +1,22 @@
+@if (open) {
+  <div class="confirm-modal-overlay" (click)="onBackdropClick($event)">
+    <div class="confirm-modal-card" role="dialog" aria-modal="true" aria-label="Confirmation dialog">
+      <h3 class="confirm-modal-title">{{ title }}</h3>
+      <p class="confirm-modal-message">{{ message }}</p>
+
+      <div class="confirm-modal-actions">
+        <button type="button" class="confirm-btn confirm-btn-cancel" (click)="cancelled.emit()">
+          {{ cancelText }}
+        </button>
+        <button
+          type="button"
+          class="confirm-btn"
+          [class.confirm-btn-danger]="destructive"
+          [class.confirm-btn-primary]="!destructive"
+          (click)="confirmed.emit()">
+          {{ confirmText }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

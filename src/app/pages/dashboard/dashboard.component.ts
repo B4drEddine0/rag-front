@@ -3,17 +3,13 @@ import { RouterLink } from '@angular/router';
 import { ViewStateService, DashboardStatCard } from '../../core/services/view-state.service';
 import { AuthService } from '../../core/services/auth.service';
 import { StatCardComponent } from '../../components/stat-card/stat-card.component';
-import { ActionCardComponent } from '../../components/action-card/action-card.component';
-import { PageHeaderComponent } from '../../components/page-header/page-header.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
   imports: [
     RouterLink,
-    StatCardComponent,
-    ActionCardComponent,
-    PageHeaderComponent
+    StatCardComponent
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'

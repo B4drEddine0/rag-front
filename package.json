@@ -6,9 +6,7 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test",
-    "e2e": "cypress open",
-    "e2e:run": "cypress run"
+    "test": "ng test"
   },
   "prettier": {
     "printWidth": 100,
@@ -31,6 +29,9 @@
     "@angular/forms": "^21.1.0",
     "@angular/platform-browser": "^21.1.0",
     "@angular/router": "^21.1.0",
+    "@ngrx/effects": "^21.1.0",
+    "@ngrx/store": "^21.1.0",
+    "@ngrx/store-devtools": "^21.1.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },
@@ -39,7 +40,6 @@
     "@angular/cli": "^21.1.4",
     "@angular/compiler-cli": "^21.1.0",
     "@tailwindcss/postcss": "^4.2.1",
-    "cypress": "^13.6.4",
     "jsdom": "^27.1.0",
     "postcss": "^8.5.8",
     "tailwindcss": "^4.2.1",

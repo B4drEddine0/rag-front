@@ -12,12 +12,13 @@ export class ResourceService {
   uploadResourceFile(
     file: File,
     title: string,
-    classRoomId?: number,
-    isOfficial = false
+    options?: { classRoomId?: number; isOfficial?: boolean }
   ): Observable<ResourceDto> {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('title', title);
+    const classRoomId = options?.classRoomId;
+    const isOfficial = options?.isOfficial ?? false;
     if (classRoomId) {
       formData.append('classRoomId', String(classRoomId));
     }
@@ -39,6 +40,13 @@ export class ResourceService {
 
   getResourceFileBlob(id: number) {
     return this.http.get(`${BASE}/${id}/file`, {
+      observe: 'response',
+      responseType: 'blob'
+    });
+  }
+
+  getFileBlobByUrl(url: string) {
+    return this.http.get(url, {
       observe: 'response',
       responseType: 'blob'
     });
